@@ -1,23 +1,16 @@
 library(ggplot2)
+library(gridExtra)
 
-infomat <- function(a, n, vc, error) {
+# Balanced Data
+
+infomat <- function(a, n, tau, error) { #replace with tau
   tl <- 1 / (a * (n - 1))
   tr <- -1 / ((a * n) * (n - 1))
   bl <- tr
-  br <- (1 / n^2) * (((1 + n * (vc / error)) / a) + (1 / (a * (n - 1))))
+  br <- (1 / n^2) * (((1 + n * (tau))^2 / a) + (1 / (a * (n - 1))))
   elements <- c(tl, tr, bl, br)
-  info <- matrix(elements, nrow = 2, ncol = 2, byrow = TRUE)
+  info <- (2 * (error)^2) * matrix(elements, nrow = 2, ncol = 2, byrow = TRUE)
   return(info)
-}
-
-D_crit <- function(info){
-    det.inf <- det(info)
-  if (det.inf < (.Machine$double.eps)^(0.5)) {
-    D.score <- Inf
-  } else {
-    D.score <- det.inf
-  }
-  return(D.score)
 }
 
 D_crit <- function(info){
@@ -25,21 +18,373 @@ D_crit <- function(info){
   return(D.score)
 }
 
-x <- seq(1, 10, length.out = 10)
-y <- seq(1, 10, length.out = 10)
-
-grid <- expand.grid(x, y, stringsAsFactors = FALSE)
-grid$z <- numeric(100)
-for (i in 1:100) {
-  grid$z[i] <- D_crit(infomat(grid[i, 1], grid[i, 2], 100, 1))
+A_crit <- function(info) {
+  A.score <- sum(diag(info))
+  return(A.score)
 }
 
-ggplot(grid) +
-  geom_contour(data = grid, aes(x = Var1, y = Var2, z = as.double(z)),
-               color = "black") +
-  xlim(1, 10) +
-  ylim(1, 10)
+
+
+ngroups <- c(5, 10, 20, 30)
+nreps <- c(5, 10, 20)
+taus <- c(0.5, 1, 2, 5)
+balanced_contours_scores <- list()
+balanced_contours_releff <- list()
+balanced_contours_A_scores <- list()
+balanced_contours_A_releff <- list()
+count = 0
+
+for (i in seq_along(ngroups)) {
+  for (j in seq_along(nreps)) {
+    for (k in seq_along(taus)) {
+      count = count + 1
+
+      x <- seq(2, ngroups[i], length.out = (ngroups[i]-1))
+      y <- seq(2, nreps[j], length.out = (nreps[j] - 1))
+
+      grid <- expand.grid(x, y, stringsAsFactors = FALSE)
+      grid$z <- numeric((ngroups[i]-1) * (nreps[j] - 1))
+      for (l in seq_along(grid$z)) {
+        grid$z[l] <- D_crit(infomat(grid[l, 1], grid[l, 2], taus[k], 1)) #replace with lambda as ratio
+      }
+      OD_score <- as.double(tail(grid, n=1)[3])
+      grid$releff <- (OD_score / grid$z) * 100
+
+
+      # add y=x line for reference
+      #try 30 for number of groups and 20 for n as maxes
+      contour_score <- ggplot(grid) +
+        geom_contour_filled(data = grid,
+                            aes(x = Var1, y = Var2,
+                                z = as.double(z)), color = "black") +
+        xlim(0, ngroups[i]) +
+        ylim(0, nreps[j]) +
+        xlab("Number of Groups") +
+        ylab("Reps per Group") +
+        scale_x_continuous(breaks = seq(0, ngroups[i], 2)) +
+        scale_y_continuous(breaks = seq(0, nreps[j], 2)) +
+        geom_abline(slope = 1, intercept = 0, color = "red") +
+        ggtitle(paste0("D score when Tau = ", taus[k]))
+
+      contour_releff <- ggplot(grid) +
+        geom_contour_filled(data = grid,
+                            aes(x = Var1, y = Var2,
+                                z = as.double(releff)), color = "black") +
+        xlim(0, ngroups[i]) +
+        ylim(0, nreps[j]) +
+        xlab("Number of Groups") +
+        ylab("Reps per Group") +
+        scale_x_continuous(breaks = seq(0, ngroups[i], 2)) +
+        scale_y_continuous(breaks = seq(0, nreps[j], 2)) +
+        geom_abline(slope = 1, intercept = 0, color = "red") +
+        ggtitle(paste0("Relative Efficiency when Tau = ", taus[k]))
+
+      balanced_contours_scores[[count]] <- contour_score
+      balanced_contours_releff[[count]] <- contour_releff
+
+    }
+  }
+}
+
+grid.arrange(balanced_contours_scores[[1]], balanced_contours_releff[[1]],
+             balanced_contours_scores[[2]], balanced_contours_releff[[2]],
+             balanced_contours_scores[[3]], balanced_contours_releff[[3]],
+             balanced_contours_scores[[4]], balanced_contours_releff[[4]],
+             ncol=4)
+
+grid.arrange(balanced_contours_scores[[5]], balanced_contours_releff[[5]],
+             balanced_contours_scores[[6]], balanced_contours_releff[[6]],
+             balanced_contours_scores[[7]], balanced_contours_releff[[7]],
+             balanced_contours_scores[[8]], balanced_contours_releff[[8]],
+             ncol=4)
+
+grid.arrange(balanced_contours_scores[[9]], balanced_contours_releff[[9]],
+             balanced_contours_scores[[10]], balanced_contours_releff[[10]],
+             balanced_contours_scores[[11]], balanced_contours_releff[[11]],
+             balanced_contours_scores[[12]], balanced_contours_releff[[12]],
+             ncol=4)
+
+grid.arrange(balanced_contours_scores[[13]], balanced_contours_releff[[13]],
+             balanced_contours_scores[[14]], balanced_contours_releff[[14]],
+             balanced_contours_scores[[15]], balanced_contours_releff[[15]],
+             balanced_contours_scores[[16]], balanced_contours_releff[[16]],
+             ncol=4)
+
+grid.arrange(balanced_contours_scores[[17]], balanced_contours_releff[[17]],
+             balanced_contours_scores[[18]], balanced_contours_releff[[18]],
+             balanced_contours_scores[[19]], balanced_contours_releff[[19]],
+             balanced_contours_scores[[20]], balanced_contours_releff[[20]],
+             ncol=4)
+
+grid.arrange(balanced_contours_scores[[21]], balanced_contours_releff[[21]],
+             balanced_contours_scores[[22]], balanced_contours_releff[[22]],
+             balanced_contours_scores[[23]], balanced_contours_releff[[23]],
+             balanced_contours_scores[[24]], balanced_contours_releff[[24]],
+             ncol=4)
+
+grid.arrange(balanced_contours_scores[[25]], balanced_contours_releff[[25]],
+             balanced_contours_scores[[26]], balanced_contours_releff[[26]],
+             balanced_contours_scores[[27]], balanced_contours_releff[[27]],
+             balanced_contours_scores[[28]], balanced_contours_releff[[28]],
+             ncol=4)
+
+grid.arrange(balanced_contours_scores[[29]], balanced_contours_releff[[29]],
+             balanced_contours_scores[[30]], balanced_contours_releff[[30]],
+             balanced_contours_scores[[31]], balanced_contours_releff[[31]],
+             balanced_contours_scores[[32]], balanced_contours_releff[[32]],
+             ncol=4)
+
+grid.arrange(balanced_contours_scores[[33]], balanced_contours_releff[[33]],
+             balanced_contours_scores[[34]], balanced_contours_releff[[34]],
+             balanced_contours_scores[[35]], balanced_contours_releff[[35]],
+             balanced_contours_scores[[36]], balanced_contours_releff[[36]],
+             ncol=4)
+
+grid.arrange(balanced_contours_scores[[37]], balanced_contours_releff[[37]],
+             balanced_contours_scores[[38]], balanced_contours_releff[[38]],
+             balanced_contours_scores[[39]], balanced_contours_releff[[39]],
+             balanced_contours_scores[[40]], balanced_contours_releff[[40]],
+             ncol=4)
+
+grid.arrange(balanced_contours_scores[[41]], balanced_contours_releff[[41]],
+             balanced_contours_scores[[42]], balanced_contours_releff[[42]],
+             balanced_contours_scores[[43]], balanced_contours_releff[[43]],
+             balanced_contours_scores[[44]], balanced_contours_releff[[44]],
+             ncol=4)
+
+grid.arrange(balanced_contours_scores[[45]], balanced_contours_releff[[45]],
+             balanced_contours_scores[[46]], balanced_contours_releff[[46]],
+             balanced_contours_scores[[47]], balanced_contours_releff[[47]],
+             balanced_contours_scores[[48]], balanced_contours_releff[[48]],
+             ncol=4)
+
+for (i in seq_along(ngroups)) {
+  for (j in seq_along(nreps)) {
+    for (k in seq_along(taus)) {
+      count = count + 1
+
+      x <- seq(2, ngroups[i], length.out = (ngroups[i]-1))
+      y <- seq(2, nreps[j], length.out = (nreps[j] - 1))
+
+      grid <- expand.grid(x, y, stringsAsFactors = FALSE)
+      grid$z <- numeric((ngroups[i]-1) * (nreps[j] - 1))
+      for (l in seq_along(grid$z)) {
+        grid$z[l] <- A_crit(infomat(grid[l, 1], grid[l, 2], taus[k], 1)) #replace with lambda as ratio
+      }
+      OD_score <- as.double(tail(grid, n=1)[3])
+      grid$releff <- (OD_score / grid$z) * 100
+
+
+      # add y=x line for reference
+      #try 30 for number of groups and 20 for n as maxes
+      contour_score <- ggplot(grid) +
+        geom_contour_filled(data = grid,
+                            aes(x = Var1, y = Var2,
+                                z = as.double(z)), color = "black") +
+        xlim(0, ngroups[i]) +
+        ylim(0, nreps[j]) +
+        xlab("Number of Groups") +
+        ylab("Reps per Group") +
+        scale_x_continuous(breaks = seq(0, ngroups[i], 2)) +
+        scale_y_continuous(breaks = seq(0, nreps[j], 2)) +
+        geom_abline(slope = 1, intercept = 0, color = "red") +
+        ggtitle(paste0("A score when Tau = ", taus[k]))
+
+      contour_releff <- ggplot(grid) +
+        geom_contour_filled(data = grid,
+                            aes(x = Var1, y = Var2,
+                                z = as.double(releff)), color = "black") +
+        xlim(0, ngroups[i]) +
+        ylim(0, nreps[j]) +
+        xlab("Number of Groups") +
+        ylab("Reps per Group") +
+        scale_x_continuous(breaks = seq(0, ngroups[i], 2)) +
+        scale_y_continuous(breaks = seq(0, nreps[j], 2)) +
+        geom_abline(slope = 1, intercept = 0, color = "red") +
+        ggtitle(paste0("Relative Efficiency when Tau = ", taus[k]))
+
+      balanced_contours_A_scores[[count]] <- contour_score
+      balanced_contours_A_releff[[count]] <- contour_releff
+
+    }
+  }
+}
+
+grid.arrange(balanced_contours_A_scores[[1]], balanced_contours_A_releff[[1]],
+             balanced_contours_A_scores[[2]], balanced_contours_A_releff[[2]],
+             balanced_contours_A_scores[[3]], balanced_contours_A_releff[[3]],
+             balanced_contours_A_scores[[4]], balanced_contours_A_releff[[4]],
+             ncol=4)
+
+grid.arrange(balanced_contours_A_scores[[5]], balanced_contours_A_releff[[5]],
+             balanced_contours_A_scores[[6]], balanced_contours_A_releff[[6]],
+             balanced_contours_A_scores[[7]], balanced_contours_A_releff[[7]],
+             balanced_contours_A_scores[[8]], balanced_contours_A_releff[[8]],
+             ncol=4)
+
+grid.arrange(balanced_contours_A_scores[[9]], balanced_contours_A_releff[[9]],
+             balanced_contours_A_scores[[10]], balanced_contours_A_releff[[10]],
+             balanced_contours_A_scores[[11]], balanced_contours_A_releff[[11]],
+             balanced_contours_A_scores[[12]], balanced_contours_A_releff[[12]],
+             ncol=4)
+
+grid.arrange(balanced_contours_A_scores[[13]], balanced_contours_A_releff[[13]],
+             balanced_contours_A_scores[[14]], balanced_contours_A_releff[[14]],
+             balanced_contours_A_scores[[15]], balanced_contours_A_releff[[15]],
+             balanced_contours_A_scores[[16]], balanced_contours_A_releff[[16]],
+             ncol=4)
+
+grid.arrange(balanced_contours_A_scores[[17]], balanced_contours_A_releff[[17]],
+             balanced_contours_A_scores[[18]], balanced_contours_A_releff[[18]],
+             balanced_contours_A_scores[[19]], balanced_contours_A_releff[[19]],
+             balanced_contours_A_scores[[20]], balanced_contours_A_releff[[20]],
+             ncol=4)
+
+grid.arrange(balanced_contours_A_scores[[21]], balanced_contours_A_releff[[21]],
+             balanced_contours_A_scores[[22]], balanced_contours_A_releff[[22]],
+             balanced_contours_A_scores[[23]], balanced_contours_A_releff[[23]],
+             balanced_contours_A_scores[[24]], balanced_contours_A_releff[[24]],
+             ncol=4)
+
+grid.arrange(balanced_contours_A_scores[[25]], balanced_contours_A_releff[[25]],
+             balanced_contours_A_scores[[26]], balanced_contours_A_releff[[26]],
+             balanced_contours_A_scores[[27]], balanced_contours_A_releff[[27]],
+             balanced_contours_A_scores[[28]], balanced_contours_A_releff[[28]],
+             ncol=4)
+
+grid.arrange(balanced_contours_A_scores[[29]], balanced_contours_A_releff[[29]],
+             balanced_contours_A_scores[[30]], balanced_contours_A_releff[[30]],
+             balanced_contours_A_scores[[31]], balanced_contours_A_releff[[31]],
+             balanced_contours_A_scores[[32]], balanced_contours_A_releff[[32]],
+             ncol=4)
+
+grid.arrange(balanced_contours_A_scores[[33]], balanced_contours_A_releff[[33]],
+             balanced_contours_A_scores[[34]], balanced_contours_A_releff[[34]],
+             balanced_contours_A_scores[[35]], balanced_contours_A_releff[[35]],
+             balanced_contours_A_scores[[36]], balanced_contours_A_releff[[36]],
+             ncol=4)
+
+grid.arrange(balanced_contours_A_scores[[37]], balanced_contours_A_releff[[37]],
+             balanced_contours_A_scores[[38]], balanced_contours_A_releff[[38]],
+             balanced_contours_A_scores[[39]], balanced_contours_A_releff[[39]],
+             balanced_contours_A_scores[[40]], balanced_contours_A_releff[[40]],
+             ncol=4)
+
+grid.arrange(balanced_contours_A_scores[[41]], balanced_contours_A_releff[[41]],
+             balanced_contours_A_scores[[42]], balanced_contours_A_releff[[42]],
+             balanced_contours_A_scores[[43]], balanced_contours_A_releff[[43]],
+             balanced_contours_A_scores[[44]], balanced_contours_A_releff[[44]],
+             ncol=4)
+
+grid.arrange(balanced_contours_A_scores[[45]], balanced_contours_A_releff[[45]],
+             balanced_contours_A_scores[[46]], balanced_contours_A_releff[[46]],
+             balanced_contours_A_scores[[47]], balanced_contours_A_releff[[47]],
+             balanced_contours_A_scores[[48]], balanced_contours_A_releff[[48]],
+             ncol=4)
+
+
+
 
 summary(grid$z)
 boxplot(grid$z)
 which.min(grid$z)
+
+# Unbalanced Data
+
+#install.packages("partitions")
+library(partitions)
+
+
+# define total number of experimental runs
+N      <- 8
+
+# partition total sample size (all possible)
+ps  <- parts(N)
+
+# compute the number of levels of experimental factor
+#  represented by each design/partitioning
+nZeros <- function(X, N) N - sum(X == 0)
+
+
+# define a and subset partitions to take only the
+#  relevant experimental designs
+getCols <- function(P, A){
+  n.lev.a   <- apply(P, 2, nZeros, N = N)
+  keep.cols <- which(n.lev.a == A)
+  return(P[,keep.cols])
+}
+
+# try it out
+getCols(P = ps, A = 1)
+getCols(P = ps, A = 2)
+getCols(P = ps, A = 3)
+getCols(P = ps, A = 4)
+getCols(P = ps, A = 5)
+getCols(P = ps, A = 6)
+getCols(P = ps, A = 7)
+getCols(P = ps, A = 8)
+
+
+
+
+# define total number of experimental runs
+N <- 30
+
+# partition total sample size (all possible)
+ps  <- parts(N)
+
+# try it out
+g2 <- getCols(P = ps, A = 2)
+g5 <- getCols(P = ps, A = 5)
+g10 <-getCols(P = ps, A = 10)
+g20 <- getCols(P = ps, A = 20)
+
+# unbalanced information matrix
+
+u_infomat <- function(N, a, n_i, vc, error) {
+  lambda_i <- error + n_i * vc
+  D <- ((N - a) / error^2) * sum((n_i / lambda_i)^2) +
+    sum(1 / lambda_i^2) * sum((n_i / lambda_i)^2) -
+    (sum(n_i / lambda_i^2))^2
+  tl <- sum((n_i / lambda_i)^2)
+  tr <- - sum(n_i / lambda_i^2)
+  bl <- tr
+  br <- ((N - a) / error^2) + sum(1 / lambda_i^2)
+  elements <- c(tl, tr, bl, br)
+  info <- (2 / D) * matrix(elements, 2, 2, byrow = TRUE)
+  return(info)
+}
+
+# test
+u_infomat(10, 4, c(1,2,3,4), 2, 1)
+
+g2 <- g2[1:2,]
+g2
+
+unbalanced_designs <- list()
+unbalanced_designs <- data.frame("N" = double(1000),
+                                 "a" = double(1000),
+                                 "n_i" = character(1000),
+                                 "vc" = double(1000),
+                                 "A Score" = double(1000),
+                                 "D Score" = double(1000))
+count = 0
+
+for (i in seq_along(taus)) {
+  for (j in 1:ncol(g2)) {
+    count = count + 1
+    info <- u_infomat(N = N, a = 2, n_i = g2[1:2, j], taus[i], 1)
+    unbalanced_designs$N[count] = 30
+    unbalanced_designs$a[count] = 2
+    unbalanced_designs$n_i[count] = paste0(g2[1, j], ", ", g2[2, j])
+    unbalanced_designs$vc[count] = taus[i]
+    unbalanced_designs$A.Score[count] = A_crit(info)
+    unbalanced_designs$D.Score[count] = D_crit(info)
+  }
+}
+
+unbalanced_designs
+
+
+
+
