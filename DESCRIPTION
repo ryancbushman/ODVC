@@ -1,12 +1,23 @@
 Package: ODVC
-Title: What the Package Does (One Line, Title Case)
+Title: ODVC is a tool that allows users to do Optimal Design for Variance Components
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+    person("Ryan", "Bushman", , "ryan.c.bushman@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-9278-2000"))
+Description: This package allows a user to compare designs from catalogs of both 
+    balanced and unbalanced experiments from models in which the variance 
+    components are the effects of interst. These experiments are scored on both 
+    the 'A' and 'D' criteria. The user can generate contour plots that allow 
+    them to compare designs of various parameter selections such that they can 
+    choose the most quality cost effective design
+License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
+Depends: 
+    R (>= 2.10)
+LazyData: true
+Imports:
+  ggplot2,
+  gridExtra,
+  partitions
