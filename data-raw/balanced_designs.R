@@ -3,7 +3,7 @@
 balanced_designs <- data.frame("N" = double(96),
                                "a" = double(96),
                                "n" = character(96),
-                               "tau" = double(96),
+                               "tau" = character(96),
                                "Criteria" = double(96),
                                 "Score" = double(96),
                                "Cross Score" = double(96))
