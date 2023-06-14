@@ -1,6 +1,6 @@
-#' one_way_balanced_MLE_covariance
+#' one_way_cov_B
 #'
-#' one_way_balanced_MLE_covariance provides the asymptotic covariance matrix for
+#' one_way_cov_B provides the asymptotic covariance matrix for
 #' the maximum likelihood estimators of a one-way ANOVA experiment design with a
 #' single random effect. This matrix represents the inverse of the information
 #' matrix of the user's model and should be minimized in optimal design of
@@ -20,9 +20,9 @@
 #'
 #' @examples
 #'
-#' M <- one_way_balanced_MLE_covariance(error = 1, tau = 1, a = 5, n = 5)
+#' M <- one_way_cov_B(error = 1, tau = 1, a = 5, n = 5)
 #'
-one_way_balanced_MLE_covariance <- function(error = 1, tau = 1, a, n) {
+one_way_cov_B <- function(error = 1, tau = 1, a, n) {
   tl <- 1 / (a * (n - 1))
   tr <- -1 / ((a * n) * (n - 1))
   bl <- tr
