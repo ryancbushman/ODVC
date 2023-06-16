@@ -4,18 +4,21 @@
 \alias{compare_designs_B}
 \title{compare_designs_B}
 \usage{
-compare_designs_B(designs)
+compare_designs_B(designs, criteria)
 }
 \arguments{
-\item{designs}{a data.frame object returned by the function
-subset_designs_B()}
+\item{designs}{a data.frame object of designs of size N returned by the
+function subset_designs_B()}
 }
 \value{
-a ggplot object
+a dashboard of ggplot objects
 }
 \description{
-compare_designs_B is used to create a plot of balanced designs all with the
-same number of design points, but varying number of groups and values of tau.
+compare_designs_B is used to create a dashboard of comparison plots for
+designs of the same size N. The top left plot compares the score of the
+designs across values of tau. The top right plot compares the relative
+efficiency of all designs of size N despite the value of tau. The remaining
+plots compare the relative efficiency of designs for specific values of tau.
 }
 \examples{
 

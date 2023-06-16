@@ -488,7 +488,40 @@
 # }
 #
 # unbalanced_designs[3855, 1:6]
+
 #
 #
+# Hes <- function(error, vc, n, N){
+#   tl <- (1 / error^4) - ((2 * n * vc^2) / (n * vc^2 * error^4 + error^6)) + ((n^2 * vc^4) / (n * vc^2 * error^2 + error^4)^2)
+#   tr <- (n / error^4) - ((2 * n^2 * vc^2) / (n * vc^2 * error*4 + error^6)) + ((n^3 * vc^4) / (n * vc^2 * error^2 + error^4)^2)
+#   bl <- tr
+#   br <- (n^2 / error^4) - ((2 * n^3 * vc^2) / (n * vc^2 * error^4 + error^6)) + ((n^4 * vc^4) / (n * vc^2 * error^4 + error^6)^2)
+#   elements <- c(tl, tr, bl, br)
+#   info <- matrix(elements, nrow = 2, ncol = 2, byrow = TRUE)
+#   info <- (N / 2) * info
+#   return(info)
+# }
 #
+# Hes2 <- function(error, vc, n, N) {
+#   v_inv <- (1 / error^2) - ((n * vc^2) / (n * vc^2 * error^2 + error^4))
+#   tl <- (N / 2) * v_inv * v_inv
+#   tr <- (N / 2) * v_inv * v_inv * n
+#   bl <- tr
+#   br <- (N / 2) * v_inv * n * v_inv * n
+#   elements <- c(tl, tr, bl, br)
+#   info <- matrix(elements, nrow = 2, ncol = 2, byrow = TRUE)
+#   return(info)
+# }
 #
+# v_inv <- (1 / error^2) - ((n * vc^2) / (n * vc^2 * error^2 + error^4))
+# tl <- (N / 2) * v_inv * v_inv
+# tr <- (N / 2) * v_inv * v_inv * n
+# bl <- (N / 2) * v_inv * n * v_inv
+# br <- (N / 2) * v_inv * n * v_inv * n
+#
+# test1 <- one_way_cov_B(error = 1, tau = 1, 10, 10)
+#
+# trial <- Hes(1, 1, 10, 100)
+# test2 <- solve(trial)
+#
+# # My function is close to the output of the searle dispersion matrix, but the elements are mixed around

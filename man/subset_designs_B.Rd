@@ -4,9 +4,11 @@
 \alias{subset_designs_B}
 \title{subset_designs_B}
 \usage{
-subset_designs_B(N, criteria)
+subset_designs_B(data, N, criteria)
 }
 \arguments{
+\item{data}{a dataframe of designs generated using generate_designs_B()}
+
 \item{N}{an integer value representing the total number of experiment design
 points}
 
@@ -16,10 +18,10 @@ points}
 a data.frame object of balanced designs meeting user specifications
 }
 \description{
-subset_designs_B returns a dataset of balanced designs with a user specified
-number of design points. This dataset allows the user to compare various
-designs of the same size across different numbers of groups, replications,
-and ratio of variance components (tau)
+subset_designs_B returns a dataset of balanced designs that have a user
+specified number of design points. This dataset allows the user to compare
+various designs of the same size across different numbers of groups,
+replications, and ratio of variance components (tau)
 }
 \examples{
 
