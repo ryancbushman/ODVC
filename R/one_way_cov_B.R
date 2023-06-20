@@ -14,8 +14,8 @@
 #' @param n an integer number of replications per group in a one-way ANOVA
 #' experiment design
 #'
-#' @return the information matrix for a one-way ANOVA experiment design with
-#' user set parameters
+#' @return the maximum likelihood estimator covariance matrix for a user
+#' specified balanced one-way ANOVA model.
 #' @export
 #'
 #' @examples

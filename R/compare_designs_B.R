@@ -25,7 +25,7 @@ compare_designs_B <- function(designs, criteria){
          y = paste0(designs$Criteria[1], " Score"),
          color = "tau") +
     geom_text(aes(label = round(Score, 3)), size = 3,
-              position = position_dodge(4.55), vjust = -0.5)
+              position = position_dodge(4.55), vjust = -0.1)
 
   r_plot <- ggplot(data = designs, aes(x = a, y = releff, fill = tau)) +
     geom_bar(stat = "identity", position = position_dodge()) +
@@ -34,7 +34,7 @@ compare_designs_B <- function(designs, criteria){
          y = paste0(designs$Criteria[1], " Relative Efficiency"),
          color = "tau") +
     geom_text(aes(label = round(releff, 3)), size = 3,
-              position = position_dodge(4.55), vjust = -0.5)
+              position = position_dodge(4.55), vjust = -0.1)
 
   subsets <- vector(mode = 'list', length = length(unique(designs$tau)))
   taus <- unique(designs$tau)
@@ -59,7 +59,8 @@ compare_designs_B <- function(designs, criteria){
   for (l in seq_along(taus)) {
     tau_plots[[l]] <- ggplot(data = subsets[[l]], aes(x = a, y = releff)) +
       geom_bar(stat = 'identity') +
-      labs(title = paste0("Relative Efficiency of Designs with Tau = ", taus[l]))
+      labs(title = paste0("Relative Efficiency of Designs with Tau = ", taus[l])) +
+      ylab("Relative Efficiency")
   }
 
   grob <- vector(mode = 'list', length = length(taus) + 1)

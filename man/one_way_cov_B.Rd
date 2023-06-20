@@ -19,8 +19,8 @@ experiment design}
 experiment design}
 }
 \value{
-the information matrix for a one-way ANOVA experiment design with
-user set parameters
+the maximum likelihood estimator covariance matrix for a user
+specified balanced one-way ANOVA model.
 }
 \description{
 one_way_cov_B provides the asymptotic covariance matrix for
