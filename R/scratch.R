@@ -491,37 +491,65 @@
 
 
 
-Hes <- function(error, vc, n, N){
-  tl <- (1 / error^4) - ((2 * n * vc^2) / (n * vc^2 * error^4 + error^6)) + ((n^2 * vc^4) / (n * vc^2 * error^2 + error^4)^2)
-  tr <- (n / error^4) - ((2 * n^2 * vc^2) / (n * vc^2 * error*4 + error^6)) + ((n^3 * vc^4) / (n * vc^2 * error^2 + error^4)^2)
-  bl <- tr
-  br <- (n^2 / error^4) - ((2 * n^3 * vc^2) / (n * vc^2 * error^4 + error^6)) + ((n^4 * vc^4) / (n * vc^2 * error^4 + error^6)^2)
-  elements <- c(tl, tr, bl, br)
-  info <- matrix(elements, nrow = 2, ncol = 2, byrow = TRUE)
-  info <- (N / 2) * info
-  return(info)
-}
-
-Hes2 <- function(error, vc, n, N) {
-  v_inv <- (1 / error^2) - ((n * vc^2) / (n * vc^2 * error^2 + error^4))
-  tl <- (N / 2) * v_inv * v_inv
-  tr <- (N / 2) * v_inv * v_inv * n
-  bl <- tr
-  br <- (N / 2) * v_inv * n * v_inv * n
-  elements <- c(tl, tr, bl, br)
-  info <- matrix(elements, nrow = 2, ncol = 2, byrow = TRUE)
-  return(info)
-}
-
-# v_inv <- (1 / error^2) - ((n * vc^2) / (n * vc^2 * error^2 + error^4))
-# tl <- (N / 2) * v_inv * v_inv
-# tr <- (N / 2) * v_inv * v_inv * n
-# bl <- (N / 2) * v_inv * n * v_inv
-# br <- (N / 2) * v_inv * n * v_inv * n
-
-test1 <- one_way_cov_B(error = 1, tau = 1, 10, 10)
-
-trial <- Hes(1, 1, 10, 100)
-test2 <- solve(trial)
+# Hes <- function(error, vc, n, N){
+#   tl <- (1 / error^4) - ((2 * n * vc^2) / (n * vc^2 * error^4 + error^6)) + ((n^2 * vc^4) / (n * vc^2 * error^2 + error^4)^2)
+#   tr <- (n / error^4) - ((2 * n^2 * vc^2) / (n * vc^2 * error*4 + error^6)) + ((n^3 * vc^4) / (n * vc^2 * error^2 + error^4)^2)
+#   bl <- tr
+#   br <- (n^2 / error^4) - ((2 * n^3 * vc^2) / (n * vc^2 * error^4 + error^6)) + ((n^4 * vc^4) / (n * vc^2 * error^4 + error^6)^2)
+#   elements <- c(tl, tr, bl, br)
+#   info <- matrix(elements, nrow = 2, ncol = 2, byrow = TRUE)
+#   info <- (N / 2) * info
+#   return(info)
+# }
+#
+# Hes2 <- function(error, vc, n, N) {
+#   v_inv <- (1 / error^2) - ((n * vc^2) / (n * vc^2 * error^2 + error^4))
+#   tl <- (N / 2) * v_inv * v_inv
+#   tr <- (N / 2) * v_inv * v_inv * n
+#   bl <- tr
+#   br <- (N / 2) * v_inv * n * v_inv * n
+#   elements <- c(tl, tr, bl, br)
+#   info <- matrix(elements, nrow = 2, ncol = 2, byrow = TRUE)
+#   return(info)
+# }
+#
+# test1 <- one_way_cov_B(error = 1, tau = 1, 10, 10)
+#
+# trial <- Hes(1, 1, 10, 100)
+# test2 <- solve(trial)
 
 # My function is close to the output of the searle dispersion matrix, but the elements are mixed around
+
+der_V_sig_a_sq <- function(n, g, sig_a_sq) {
+  kronecker(diag(1, g), matrix(rep(1, n * n), nrow = n, ncol = n))
+}
+
+J_n <- function(n) {
+  (1 / n) * matrix(rep(1, n * n), nrow = n, ncol = n)
+}
+
+V <- function(n, g, sig_a_sq, error_sq) {
+  first <- diag(1, nrow = g)
+  second <- (n * sig_a_sq) * J_n(n)
+  third <- error_sq * diag(1, nrow = n)
+  kronecker(first, (second + third))
+}
+
+Hes3 <- function(n, g, sig_a_sq, error_sq) {
+  temp_V <- V(n = n, g = g, sig_a_sq = sig_a_sq, error_sq = error_sq)
+  temp_der <- der_V_sig_a_sq(n = n, g = g, sig_a_sq = sig_a_sq)
+  t_l <- (1 / 2) * sum(diag(solve(temp_V) %*% solve(temp_V)))
+  t_r <- (1 / 2) * sum(diag(solve(temp_V) %*% temp_der %*% solve(temp_V)))
+  b_l <- (1 / 2) * sum(diag(solve(temp_V) %*% solve(temp_V) %*% temp_der))
+  b_r <- (1 / 2) * sum(diag(solve(temp_V) %*% temp_der %*% solve(temp_V) %*% temp_der))
+
+  matrix(c(t_l, t_r, b_l, b_r), nrow = 2, ncol = 2)
+}
+
+Hes3(n = 10, g = 15, sig_a_sq = 5, error_sq = 1)
+solve(one_way_cov_B(error = 1, tau = 5, a = 15, n = 10))
+
+# I think I got my derivative of V with respect to sig_sq_A wrong. Factor out the 1/n from J_n and the derivative would just be kronecker(I_g, J_n)
+
+
+

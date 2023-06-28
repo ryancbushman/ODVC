@@ -4,7 +4,7 @@
 \alias{one_way_cov_U}
 \title{one_way_cov_U}
 \usage{
-one_way_cov_U(N, a, n_i, vc, error)
+one_way_cov_U(N, a, n_i, sig_a, error)
 }
 \arguments{
 \item{N}{an integer number of total design points in the experiment}
@@ -13,7 +13,7 @@ one_way_cov_U(N, a, n_i, vc, error)
 
 \item{n_i}{a vector of doubles representing the number of replications per group}
 
-\item{vc}{a double representing the estimate of the variance component}
+\item{sig_a}{a double representing the estimate of \deqn{\sigma^2_A}}
 
 \item{error}{a double representing the residual mean error}
 }
@@ -30,6 +30,6 @@ experiments.
 }
 \examples{
 
-u_info <- u_infomat(N = 10, a = 4, n_i = c(1,2,3,4), vc = 2, error = 1)
+information <- one_way_cov_U(N = 10, a = 4, n_i = c(1,2,3,4), sig_a = 2, error = 1)
 
 }

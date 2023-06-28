@@ -9,7 +9,7 @@
 #' @param N an integer number of total design points in the experiment
 #' @param a an integer number of groups in the experiment
 #' @param n_i a vector of doubles representing the number of replications per group
-#' @param vc a double representing the estimate of the variance component
+#' @param sig_a a double representing the estimate of \deqn{\sigma^2_A}
 #' @param error a double representing the residual mean error
 #'
 #' @return the maximum likelihood estimator covariance matrix for a user
@@ -18,10 +18,10 @@
 #'
 #' @examples
 #'
-#' u_info <- u_infomat(N = 10, a = 4, n_i = c(1,2,3,4), vc = 2, error = 1)
+#' information <- one_way_cov_U(N = 10, a = 4, n_i = c(1,2,3,4), sig_a = 2, error = 1)
 #'
-one_way_cov_U <- function(N, a, n_i, vc, error) {
-  lambda_i <- error + n_i * vc
+one_way_cov_U <- function(N, a, n_i, sig_a, error) {
+  lambda_i <- error + n_i * sig_a
   D <- ((N - a) / error^2) * sum((n_i / lambda_i)^2) +
     sum(1 / lambda_i^2) * sum((n_i / lambda_i)^2) -
     (sum(n_i / lambda_i^2))^2

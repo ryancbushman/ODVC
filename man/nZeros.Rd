@@ -2,13 +2,20 @@
 % Please edit documentation in R/nZeros.R
 \name{nZeros}
 \alias{nZeros}
-\title{Title}
+\title{nZeros is a helper function that is used with getCols() to select only
+columns from a dataframe that has a certain number of zeros}
 \usage{
 nZeros(X, N)
 }
 \arguments{
-\item{N}{}
+\item{X}{a dataframe that is being subset}
+
+\item{N}{the number of experiment observations DOUBLE CHECK}
+}
+\value{
+the number of zeros in a column
 }
 \description{
-Title
+nZeros is a helper function that is used with getCols() to select only
+columns from a dataframe that has a certain number of zeros
 }

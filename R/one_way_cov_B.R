@@ -26,7 +26,7 @@ one_way_cov_B <- function(error = 1, tau = 1, a, n) {
   tl <- 1 / (a * (n - 1))
   tr <- -1 / ((a * n) * (n - 1))
   bl <- tr
-  br <- (1 / n^2) * (((1 + n * (tau))^2 / a) + (1 / (a * (n - 1))))
+  br <- (1 / n^2) * (((1 + (n * tau))^2 / a) + (1 / (a * (n - 1))))
   elements <- c(tl, tr, bl, br)
   info <- (2 * (error)^2) * matrix(elements, nrow = 2, ncol = 2, byrow = TRUE)
   return(info)

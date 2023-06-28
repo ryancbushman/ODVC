@@ -4,11 +4,28 @@
 \alias{generate_designs_U}
 \title{Title}
 \usage{
-generate_designs_U(N, a, vc, criteria, error)
+generate_designs_U(N, a, sig_a, criteria, error)
 }
 \arguments{
-\item{error}{}
+\item{N}{an integer representing the total number of design points}
+
+\item{a}{an integer representing the total number of groups}
+
+\item{sig_a}{a vector of doubles representing the values of \deqn{\sigma^2_A}
+to try}
+
+\item{criteria}{a character "D" or "A" to indicate the design criteria to
+score on}
+
+\item{error}{a double representing the value of \deqn{\sigma^2}}
+}
+\value{
+a dataframe of experiment designs of size N
 }
 \description{
 Title
+}
+\examples{
+candidates <- generate_designs_U(N = 20, a = 4, sig_a = 2, criteria = "D",
+error = 1)
 }

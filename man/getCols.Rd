@@ -2,13 +2,25 @@
 % Please edit documentation in R/getCols.R
 \name{getCols}
 \alias{getCols}
-\title{Title}
+\title{getCols selects the columns from a dataframe of all partitions of N such that
+all the selected partitions have the same number of groups.}
 \usage{
 getCols(P, A, N)
 }
 \arguments{
-\item{N}{}
+\item{P}{partitions of N observations into A groups}
+
+\item{A}{an integer representing the number of groups}
+
+\item{N}{an integer representing the total number of experiment observations}
+}
+\value{
+a dataframe of ways to split up N observations into A groups
 }
 \description{
-Title
+getCols selects the columns from a dataframe of all partitions of N such that
+all the selected partitions have the same number of groups.
+}
+\examples{
+nparts <- getCols(P = parts(30), A = 5, N = 30)
 }

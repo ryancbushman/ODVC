@@ -20,4 +20,8 @@ LazyData: true
 Imports:
   ggplot2,
   gridExtra,
-  partitions
+  partitions,
+  ggraph,
+  igraph,
+  tidyverse,
+  statespacer
