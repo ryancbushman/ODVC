@@ -26,7 +26,7 @@ plot_design <- function(n, g, sig_a, error, criteria) {
   name <- unique(c(as.character(edges$from), as.character(edges$to)))
   vertices <- data.frame(
     name=name,
-    group=c( rep(NA, g + 1) , rep(paste("group", seq(1, g), sep=""), n))
+    group=c( rep(NA, g + 1), rep(paste("group", seq(1, g), sep=""), n))
   )
 
   mygraph <- graph_from_data_frame( edges, vertices=vertices)
@@ -45,6 +45,9 @@ plot_design <- function(n, g, sig_a, error, criteria) {
   ggraph(mygraph, layout = 'dendrogram', circular = FALSE) +
     geom_edge_elbow() +
     ggtitle(title) +
+    geom_node_point(aes(filter=leaf, size = 2, color=group) , alpha=0.6) +
     labs(caption = paste0(criteria, " Score: ", signif(score, 6))) +
-    theme_void()
+    theme_void() +
+    theme(legend.position="none")
 }
+

@@ -17,3 +17,10 @@
 # to what? If it is the whole dataset then seems unhelpful.
 
 # look into confidence intervals on variance components and the eigenvalue min max decomposition of infomat
+
+# STANDARDIZE ARGUMENTS ACROSS FUNCTIONS, I.E. A OR G FOR GROUPS
+
+# print both scores on plot design, eliminate criteria argument
+
+# I can only have one function for the 3vc 2vc case if instead of partitions, I allow the user to specify
+# how they would allocate reps.
