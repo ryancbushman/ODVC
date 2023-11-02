@@ -2,7 +2,7 @@
 % Please edit documentation in R/generate_designs_U.R
 \name{generate_designs_U}
 \alias{generate_designs_U}
-\title{Title}
+\title{generate_designs_u}
 \usage{
 generate_designs_U(N, a, sig_a_sq, error_sq)
 }
@@ -11,21 +11,23 @@ generate_designs_U(N, a, sig_a_sq, error_sq)
 
 \item{a}{an integer representing the total number of groups}
 
-\item{sig_a}{a vector of doubles representing the values of \deqn{\sigma^2_A}
+\item{sig_a_sq}{a vector of doubles representing the values of \eqn{\sigma^2_A}
 to try}
+
+\item{error_sq}{a double representing the value of \eqn{\sigma^2}}
 
 \item{criteria}{a character "D" or "A" to indicate the design criteria to
 score on}
-
-\item{error}{a double representing the value of \deqn{\sigma^2}}
 }
 \value{
-a dataframe of experiment designs of size N
+a data.frame of experiment designs of size N
 }
 \description{
-Title
+generate_designs_u allows users to generate a data.frame  of all possible
+one-way nested designs with \emph{N} observations and \emph{a} number of groups. The
+data.frame contains A and D scores and relative efficiencies calculated as a
+function of the provided hypothesized value of \eqn{\sigma^2_A}.
 }
 \examples{
-candidates <- generate_designs_U(N = 20, a = 4, sig_a_sq = 2, criteria = "D",
-error = 1)
+candidates <- generate_designs_U(N = 20, a = 4, sig_a_sq = 2, error_sq = 1)
 }

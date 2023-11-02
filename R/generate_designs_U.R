@@ -1,19 +1,23 @@
-#' Title
+#' generate_designs_u
+#'
+#' generate_designs_u allows users to generate a data.frame  of all possible
+#' one-way nested designs with *N* observations and *a* number of groups. The
+#' data.frame contains A and D scores and relative efficiencies calculated as a
+#' function of the provided hypothesized value of \eqn{\sigma^2_A}.
 #'
 #' @param N an integer representing the total number of design points
 #' @param a an integer representing the total number of groups
-#' @param sig_a a vector of doubles representing the values of \deqn{\sigma^2_A}
+#' @param sig_a_sq a vector of doubles representing the values of \eqn{\sigma^2_A}
 #' to try
 #' @param criteria a character "D" or "A" to indicate the design criteria to
 #' score on
-#' @param error a double representing the value of \deqn{\sigma^2}
+#' @param error_sq a double representing the value of \eqn{\sigma^2}
 #'
-#' @return a dataframe of experiment designs of size N
+#' @return a data.frame of experiment designs of size N
 #' @export
 #'
 #' @examples
-#' candidates <- generate_designs_U(N = 20, a = 4, sig_a_sq = 2, criteria = "D",
-#' error = 1)
+#' candidates <- generate_designs_U(N = 20, a = 4, sig_a_sq = 2, error_sq = 1)
 generate_designs_U <- function(N, a, sig_a_sq, error_sq){
 
   unbalanced_designs <- data.frame("N" = double(10000000),
@@ -39,8 +43,9 @@ generate_designs_U <- function(N, a, sig_a_sq, error_sq){
   #   cross_crit = D_crit
   # }
 
-  reps <- getCols(parts(N), A = a, N = N)
-  reps <- reps[1:a, ]
+  reps <- partitions::restrictedparts(n = N, m = a, include.zero = FALSE)
+  # reps <- getCols(parts(N), A = a, N = N)
+  # reps <- reps[1:a, ]
   count = 0
 
   for (i in seq_along(sig_a_sq)) {

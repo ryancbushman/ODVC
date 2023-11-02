@@ -18,13 +18,15 @@ Depends:
     R (>= 2.10)
 LazyData: true
 Imports:
-  ggplot2,
-  gridExtra,
-  partitions,
-  ggraph,
-  igraph,
-  tidyverse,
-  statespacer
+    ggplot2,
+    gridExtra,
+    partitions,
+    ggraph,
+    igraph,
+    tidyverse,
+    statespacer,
+    gtools,
+    scales
 Suggests: 
     knitr,
     rmarkdown
