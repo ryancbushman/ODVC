@@ -4,15 +4,15 @@
 \alias{V_3VC}
 \title{V_3VC}
 \usage{
-V_3VC(N, n_a, n_b, sig_a_sq, sig_b_sq, error_sq)
+V_3VC(N, n_i_dot, n_ij, sig_a_sq, sig_b_sq, error_sq)
 }
 \arguments{
 \item{N}{an integer representing the total number of experimental runs}
 
-\item{n_a}{integers representing the total number of reps in each group at
+\item{n_i_dot}{integers representing the total number of reps in each group at
 the first level of the experiment}
 
-\item{n_b}{integers representing the total number of reps in each group at
+\item{n_ij}{integers representing the total number of reps in each group at
 the second level of the experiment}
 
 \item{sig_a_sq}{a double representing the estimate of \deqn{\sigma^2_A}}
@@ -31,8 +31,8 @@ and \deqn{\sigma^2}
 }
 \examples{
 # Balanced design
-V_3VC(N = 8, n_a = c(4, 4), n_b = c(2, 2, 2, 2), sig_a_sq = 2, sig_b_sq = 3, error_sq = 1)
+V_3VC(N = 8, n_i_dot = c(4, 4), n_ij = c(2, 2, 2, 2), sig_a_sq = 2, sig_b_sq = 3, error_sq = 1)
 
 # Unbalanced design
-V_3VC(N = 9, n_a = c(4, 5), n_b = c(2, 3, 1, 2, 1), sig_a_sq = 2, sig_b_sq = 3, error_sq = 1)
+V_3VC(N = 9, n_i_dot = c(4, 5), n_ij = c(2, 3, 1, 2, 1), sig_a_sq = 2, sig_b_sq = 3, error_sq = 1)
 }

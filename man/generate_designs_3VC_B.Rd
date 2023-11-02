@@ -4,14 +4,14 @@
 \alias{generate_designs_3VC_B}
 \title{generate_designs_3VC_B}
 \usage{
-generate_designs_3VC_B(g, n_a, n_b, sig_a_sq, sig_b_sq, error_sq)
+generate_designs_3VC_B(a, n_i_dot, n_ij, sig_a_sq, sig_b_sq, error_sq)
 }
 \arguments{
-\item{g}{a vector of integers that represent group sizes}
+\item{a}{a vector of integers that represent group sizes}
 
-\item{n_a}{a list of integer vectors that represent how many total replications belong to each of the groups at the A level}
+\item{n_i_dot}{a list of integer vectors that represent how many total replications belong to each of the groups at the A level}
 
-\item{n_b}{a list of integer vectors that represent how many replications belong to each of the groups at the B level}
+\item{n_ij}{a list of integer vectors that represent how many replications belong to each of the groups at the B level}
 
 \item{sig_a_sq}{a vector of doubles representing estimates of \deqn{\sigma^2_A}}
 
@@ -26,16 +26,16 @@ a dataframe of candidate designs
 generate_designs_3VC_B generates a dataset of candidates experiment designs
 for nested models with three variance components: \deqn{\sigma^2_A},
 \deqn{\sigma^2_B}, and \deqn{\sigma^2}. Note that the input for arguments
-g, n_a, and n_b, should be the same length. Additionally they should the index
+g, n_i_dot, and n_ij, should be the same length. Additionally they should the index
 for each input should correspond with each other.
 }
 \examples{
-n_a = list(c(4, 4), c(4, 5))
+n_i_dot = list(c(4, 4), c(4, 5))
 g = c(2, 2)
-n_b = list(c(2,2,2,2), c(2,3,1,2,1))
+n_ij = list(c(2,2,2,2), c(2,3,1,2,1))
 sig_a_sq = 2
 sig_b_sq = 3
 error_sq = 1
-test <- generate_designs_3VC_B(g = g, n_a = n_a, n_b = n_b, sig_a_sq = sig_a_sq, sig_b_sq = sig_b_sq, error_sq = error_sq)
+test <- generate_designs_3VC_B(a = a, n_i_dot = n_i_dot, n_ij = n_ij, sig_a_sq = sig_a_sq, sig_b_sq = sig_b_sq, error_sq = error_sq)
 test
 }

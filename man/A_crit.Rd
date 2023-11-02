@@ -18,7 +18,7 @@ the trace of whatever matrix is being optimized.
 }
 \examples{
 
-M <- one_way_balanced_MLE_covariance(error = 1, tau = 1, a = 10, n = 20)
+M <- one_way_cov_B(error = 1, tau = 1, a = 10, n = 20)
 score <- A_crit(M)
 
 }

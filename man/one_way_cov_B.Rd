@@ -4,10 +4,10 @@
 \alias{one_way_cov_B}
 \title{one_way_cov_B}
 \usage{
-one_way_cov_B(error = 1, tau = 1, a, n)
+one_way_cov_B(error_sq = 1, tau = 1, a, n)
 }
 \arguments{
-\item{error}{the residual error variance component}
+\item{error_sq}{the residual error variance component}
 
 \item{tau}{a double representing the ratio of the random effect variance
 component and the residual error variance component \deqn{\frac{\sigma^2_\alpha}{\sigma^2}}}
@@ -31,6 +31,6 @@ experiments.
 }
 \examples{
 
-M <- one_way_cov_B(error = 1, tau = 1, a = 5, n = 5)
+M <- one_way_cov_B(error_sq = 1, tau = 1, a = 5, n = 5)
 
 }

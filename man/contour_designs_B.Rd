@@ -8,7 +8,7 @@ contour_designs_B(
   ngroups = c(5, 10, 20, 30),
   nreps = c(5, 10, 20),
   taus = c(0.5, 1, 2, 5),
-  error = 1,
+  error_sq = 1,
   criteria = "D"
 )
 }
@@ -22,7 +22,7 @@ group to cross with number of groups}
 \item{taus}{a vector of doubles indicating the number of values of tau to
 cross with the number of crossed groups by replications}
 
-\item{error}{a double indicating the estimated residual error of the model}
+\item{error_sq}{a double indicating the estimated residual error of the model}
 
 \item{criteria}{a character "D" or "A" indicating which design criteria to
 use}
@@ -54,7 +54,7 @@ a variable in your global environment. See example below.
 candidate_designs <- contour_designs_B(ngroups = c(10, 20),
                                         nreps = c(10, 20),
                                         taus = c(0.5, 1, 2),
-                                        error = 1,
+                                        error_sq = 1,
                                         criteria = "D")
 
 }

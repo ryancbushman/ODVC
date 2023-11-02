@@ -1,0 +1,303 @@
+---
+title: "Utilities for One-Way Random Effects Models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{A}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ODVC)
+```
+
+
+```{r}
+var_A = 2
+candidates <- generate_designs_B(ngroups = c(2, 3, 4, 5, 6, 7, 8, 9, 10), 
+                                 nreps = c(2, 3, 4, 5, 6, 7, 8, 9, 10), 
+                                 taus = var_A)
+head(candidates)
+```
+
+```{r}
+contours <- contour_designs_B(ngroups = c(2, 10), 
+                               nreps = c(2, 10), 
+                               taus = var_A, criteria = "D")
+contours[[2]][[4]]
+```
+
+```{r}
+candidates <- candidates[candidates$releff_D > 10 & candidates$releff_D <= 20, ]
+OD_D <- min(candidates$D_Score)
+OD_A <- min(candidates$A_Score)
+candidates$releff_D <- 100 * OD_D / candidates$D_Score
+candidates$releff_A <- 100 * OD_A / candidates$A_Score
+candidates
+# rescore above on those just in that dataset to see if there is something comparably good
+# perhaps repeat for tao less than 1
+candidates2 <- subset_designs_B(data = candidates, N = 30)
+candidates2
+```
+
+```{r}
+plot_design(n = rep(3, 10), g = 10, sig_a = var_A, error = 1, criteria = "A")
+```
+```{r}
+# one off plot not using plot design, axis and scores calculated in comparison to balanced design
+candidates_u <- generate_designs_U(N = 31, a = 10, sig_a = var_A, error = 1)
+candidates_u <- candidates_u[candidates_u$releff_A >= 95 | 
+                             candidates_u$releff_D >= 95, ]
+candidates_u$releff_A_balanced <- 100 * min(candidates2$A_Score) / candidates_u$A_Score
+candidates_u$releff_D_balanced <- 100 * min(candidates2$D_Score) / candidates_u$D_Score
+tail(candidates_u[, c(1:6,9,10)])
+
+compare_u <- ggplot(data = candidates_u, aes(y = releff_D_balanced,
+                          x = seq_along(releff_D_balanced))) +
+    geom_point(size = 4) +
+    geom_text(aes(label = seq_along(releff_D_balanced)), vjust = -0.5, size = 4) +
+    xlab("Dataset Index") +
+    ylab("D Relative Efficiency to Balanced Design") +
+    ggtitle("Comparing Relative Efficiency Across Unbalanced Designs of size 31") +
+    scale_x_continuous(breaks = pretty_breaks())
+
+compare_u
+
+
+compare_designs_U(candidates_u, criteria = "D")
+
+# Relative efficiency of unbalanced design compared to balanced design
+100 * candidates$D_Score[candidates$a == 10] / candidates_u$D_Score[66]
+```
+
+```{r}
+plot_design(n = c(rep(3, 9), 4), g = 10, sig_a = var_A, error = 1, criteria = "D")
+```
+
+```{r}
+var_A = c(0.1, 0.5, 1, 2, 10)
+candidates <- generate_designs_B(ngroups = c(2, 3, 4, 6, 8, 12), 
+                                 nreps = c(2, 3, 4, 6, 8, 12), 
+                                 taus = var_A)
+candidates <- subset_designs_B(data = candidates, N = 24)
+compare_designs_B(designs = candidates, criteria = "D")
+compare_designs_B(designs = candidates, criteria = "A")
+```
+
+```{r}
+
+candidates_u_1_D <- generate_designs_U(N = 24, a = 2, sig_a_sq = 0.1, error_sq = 1)
+tail(candidates_u_1_D)
+compare_designs_U(data = candidates_u_1_D, criteria = "D")
+
+candidates_u_2_D <- generate_designs_U(N = 24, a = 6, sig_a_sq = 0.5, error_sq = 1)
+candidates_u_2_D <- candidates_u_2_D[candidates_u_2_D$releff_D >= 90, ]
+compare_designs_U(data = candidates_u_2_D, criteria = "D")
+
+candidates_u_3_D <- generate_designs_U(N = 24, a = 8, sig_a_sq = 1, error_sq = 1)
+candidates_u_3_D <- candidates_u_3_D[candidates_u_3_D$releff_D >= 90, ]
+compare_designs_U(data = candidates_u_3_D, criteria = "D")
+
+candidates_u_4_D <- generate_designs_U(N = 24, a = 8, sig_a_sq = 2, error_sq = 1)
+candidates_u_4_D <- candidates_u_4_D[candidates_u_4_D$releff_D >= 90, ]
+compare_designs_U(data = candidates_u_4_D, criteria = "D")
+
+candidates_u_5_D <- generate_designs_U(N = 24, a = 12, sig_a_sq = 10, error_sq = 1)
+candidates_u_5_D <- candidates_u_5_D[candidates_u_5_D$releff_D >= 90, ]
+compare_designs_U(data = candidates_u_5_D, criteria = "D")
+
+# 2, 6, 8 & 12, 12, 12
+
+candidates_u_1_A <- generate_designs_U(N = 24, a = 2, sig_a_sq = 0.1, error_sq = 1)
+candidates_u_1_A <- candidates_u_1_A[candidates_u_1_A$releff_D >= 90, ]
+compare_designs_U(data = candidates_u_1_A, criteria = "A")
+
+candidates_u_2_A <- generate_designs_U(N = 24, a = 6, sig_a_sq = 0.5, error_sq = 1)
+candidates_u_2_A <- candidates_u_2_A[candidates_u_2_A$releff_D >= 90, ]
+compare_designs_U(data = candidates_u_2_A, criteria = "A")
+
+candidates_u_3_A <- generate_designs_U(N = 24, a = 8, sig_a_sq = 1, error_sq = 1)
+candidates_u_3_A <- candidates_u_3_A[candidates_u_3_A$releff_D >= 90, ]
+compare_designs_U(data = candidates_u_3_A, criteria = "A")
+
+candidates_u_4_A <- generate_designs_U(N = 24, a = 12, sig_a_sq = 1, error_sq = 1)
+candidates_u_4_A <- candidates_u_4_A[candidates_u_4_A$releff_D >= 90, ]
+compare_designs_U(data = candidates_u_4_A, criteria = "A")
+
+candidates_u_5_A <- generate_designs_U(N = 24, a = 12, sig_a_sq = 2, error_sq = 1)
+candidates_u_5_A <- candidates_u_5_A[candidates_u_5_A$releff_D >= 90, ]
+compare_designs_U(data = candidates_u_5_A, criteria = "A")
+
+candidates_u_6_A <- generate_designs_U(N = 24, a = 12, sig_a_sq = 10, error_sq = 1)
+candidates_u_6_A <- candidates_u_6_A[candidates_u_6_A$releff_D >= 90, ]
+compare_designs_U(data = candidates_u_6_A, criteria = "A")
+
+
+p1_1 <- plot_design(n = c(17, 7), g = 2, sig_a = 0.1, error = 1, criteria = "D") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+p1_2 <- plot_design(n = c(16, 8), g = 2, sig_a = 0.1, error = 1, criteria = "D") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+p1_3 <- plot_design(n = c(15, 9), g = 2, sig_a = 0.1, error = 1, criteria = "D") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+p1_4 <- plot_design(n = c(14, 10), g = 2, sig_a = 0.1, error = 1, criteria = "D") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+p1_5 <- plot_design(n = c(13, 11), g = 2, sig_a = 0.1, error = 1, criteria = "D") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+p1_6 <- plot_design(n = c(12, 12), g = 2, sig_a = 0.1, error = 1, criteria = "D") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+grid.arrange(p1_1, p1_2, p1_3, p1_4, p1_5, p1_6, ncol = 2)
+
+p2_1 <- plot_design(n = c(rep(3, 5), rep(2, 2), rep(1, 5)), g = 12, sig_a = 10, error = 1, criteria = "D") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+p2_2 <- plot_design(n = c(rep(3, 4), rep(2, 4), rep(1, 4)), g = 12, sig_a = 10, error = 1, criteria = "D") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+p2_3 <- plot_design(n = c(rep(3, 3), rep(2, 6), rep(1, 3)), g = 12, sig_a = 10, error = 1, criteria = "D") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+p2_4 <- plot_design(n = c(3, 3, rep(2, 8), 1, 1), g = 12, sig_a = 10, error = 1, criteria = "D") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+p2_5 <- plot_design(n = c(3, rep(2, 10), 1), g = 12, sig_a = 10, error = 1, criteria = "D") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+p2_6 <- plot_design(n = rep(2, 12), g = 12, sig_a = 10, error = 1, criteria = "D") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+grid.arrange(p2_1, p2_2, p2_3, p2_4, p2_5, p2_6, ncol = 2)
+
+p3_1 <- plot_design(n = c(17, 7), g = 2, sig_a =0.1, error = 1, criteria = "A") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+p3_2 <- plot_design(n = c(16, 8), g = 2, sig_a = 0.1, error = 1, criteria = "A") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+p3_3 <- plot_design(n = c(15, 9), g = 2, sig_a =0.1, error = 1, criteria = "A") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+p3_4 <- plot_design(n = c(14, 10), g = 2, sig_a = 0.1, error = 1, criteria = "A") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+p3_5 <- plot_design(n = c(13, 11), g = 2, sig_a = 0.1, error = 1, criteria = "A") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+p3_6 <- plot_design(n = c(12, 12), g = 2, sig_a = 0.1, error = 1, criteria = "A") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+grid.arrange(p3_1, p3_2, p3_3, p3_4, p3_5, p3_6, ncol = 2)
+
+p4_1 <- plot_design(n = c(rep(3, 5), rep(2, 2), rep(1, 5)), g = 12, sig_a = 10, error = 1, criteria = "A") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+p4_2 <- plot_design(n = c(rep(3, 4), rep(2, 4), rep(1, 4)), g = 12, sig_a = 10, error = 1, criteria = "A") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+p4_3 <- plot_design(n = c(rep(3, 3), rep(2, 6), rep(1, 3)), g = 12, sig_a = 10, error = 1, criteria = "A") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+p4_4 <- plot_design(n = c(3, 3, rep(2, 8), 1, 1), g = 12, sig_a = 10, error = 1, criteria = "A") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+p4_5 <- plot_design(n = c(3, rep(2, 10), 1), g = 12, sig_a = 10, error = 1, criteria = "A") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+p4_6 <- plot_design(n = rep(2, 12), g = 12, sig_a = 10, error = 1, criteria = "A") +
+        theme(plot.title = element_text(size=10),
+              plot.caption = element_text(size = 10))
+grid.arrange(p4_1, p4_2, p4_3, p4_4, p4_5, p4_6, ncol = 2)
+
+```
+
+```{r}
+
+candidates$a <- with(candidates,factor(a,levels = (unique(a))))
+candidates$n <- with(candidates,factor(n,levels = (unique(n))))
+
+
+A_Scores_plot <- ggplot(candidates, aes(a, n)) +                           
+  geom_tile(aes(fill = A_Score)) +
+  ggtitle("A Scores Across Designs of Size 48") +
+  scale_fill_continuous(trans = 'reverse') +
+  geom_text(aes(label = round(candidates$A_Score, 3), color = "orange"), 
+            show.legend = FALSE)
+
+D_Scores_plot <- ggplot(candidates, aes(a, n)) +                           
+  geom_tile(aes(fill = D_Score)) +
+  ggtitle("D Scores Across Designs of Size 48") +
+  scale_fill_continuous(trans = 'reverse')+
+  geom_text(aes(label = round(candidates$D_Score, 3), color = "orange"), 
+            show.legend = FALSE)
+
+
+A_releff_plot <- ggplot(candidates, aes(a, n)) +                           
+  geom_tile(aes(fill = releff_A)) +
+  ggtitle("Relative A Efficiency Across Designs of Size 48") +
+  scale_fill_continuous(trans = "identity") +
+  geom_text(aes(label = round(candidates$releff_A, 3), color = "orange"), 
+            show.legend = FALSE)
+
+
+D_releff_plot <- ggplot(candidates, aes(a, n)) +                           
+  geom_tile(aes(fill = releff_D)) +
+  ggtitle("Relative D Efficiency Across Designs of Size 48") +
+  scale_fill_continuous(trans = 'identity') +
+  geom_text(aes(label = round(candidates$releff_D, 3), color = "orange"), 
+            show.legend = FALSE)
+
+A_Scores_plot
+A_releff_plot
+D_Scores_plot
+D_releff_plot
+
+# Replicate results where design with second highest groups has best score
+
+# candidates <- generate_designs_B(ngroups = c(2,3,4,5,6,10,12,15,20,30), 
+#                                  nreps = c(2,3,4,5,6,10,12,15,20,30), 
+#                                  taus = 2)
+# candidates <- subset_designs_B(data = candidates, N = 60)
+
+```
+
+We see an interesting result here. If we're using the D criteria, the best
+design is that which has 16 groups with 3 reps per group. However, if we use
+the A criteria, the best design is that which has 24 groups with 2 reps per
+group.
+
+```{r}
+```
+
+```{r}
+candidates <- tail(candidates, 2)
+
+compare_designs_B(designs = candidates, criteria = "D")
+compare_designs_B(designs = candidates, criteria = "A")
+```
+
+```{r}
+# Decide we're interested in D criteria, so we want 4 groups with 3 reps per group
+
+candidates_u <- generate_designs_U(N = 13, a = 4, sig_a = var_A, error = 1)
+candidates_u <- candidates_u[candidates_u$releff_A >= 95 | candidates_u$releff_D >= 95, ]
+
+# Relative efficiency of unbalanced design compared to balanced design
+100 * candidates$D_Score[candidates$a == 4] / candidates_u$D_Score[5]
+
+# If you can afford 1 more rep, that is a 14% boost in efficiency
+
+```
+
+

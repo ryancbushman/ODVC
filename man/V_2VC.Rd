@@ -4,7 +4,7 @@
 \alias{V_2VC}
 \title{V_2VC}
 \usage{
-V_2VC(n, g, sig_a_sq, error_sq)
+V_2VC(n, a, sig_a_sq, error_sq)
 }
 \arguments{
 \item{n}{either a single integer or a vector of integers representing the
@@ -12,7 +12,7 @@ number of runs per group. If a single integer is used, then the experiment is
 treated as a balanced design. If a vector is used, the user can specify
 unbalanced replications for the groups}
 
-\item{g}{an integer representing the number of groups}
+\item{a}{an integer representing the number of groups}
 
 \item{sig_a_sq}{a double representing the estimate of \deqn{\sigma^2_A}}
 
@@ -27,8 +27,8 @@ a two variance components: \deqn{\sigma^2_A} and \deqn{\sigma^2}.
 }
 \examples{
 # Balanced design
-V_2VC(n = 4, g = 2, sig_a_sq = 2, error_sq = 1)
+V_2VC(n = 4, a = 2, sig_a_sq = 2, error_sq = 1)
 
 # Unbalanced design
-V_2VC(n = c(3, 5), g = 2, sig_a_sq = 2, error_sq = 1)
+V_2VC(n = c(3, 5), a = 2, sig_a_sq = 2, error_sq = 1)
 }

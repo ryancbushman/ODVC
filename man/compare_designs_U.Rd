@@ -22,6 +22,6 @@ generate_designs_U(). A reference line is included to easily identify designs
 that are at least 90\% efficient compared to the optimal design
 }
 \examples{
-candidates <- generate_designs_U(N = 20, a = 5, sig_a = 2, criteria = "D", error = 1)
+candidates <- generate_designs_U(N = 20, a = 5, sig_a_sq = 2, criteria = "D", error = 1)
 compare_designs_U(data = candidates, criteria = "D")
 }

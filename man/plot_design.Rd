@@ -4,16 +4,16 @@
 \alias{plot_design}
 \title{plot_design}
 \usage{
-plot_design(n, g, sig_a, error, criteria)
+plot_design(n, a, sig_a_sq, error_sq, criteria)
 }
 \arguments{
 \item{n}{a vector of integers representing the number of replications per group}
 
-\item{g}{an integer representing the number of groups}
+\item{a}{an integer representing the number of groups}
 
-\item{sig_a}{a double indicating the value of \deqn{\sigma^2_A}}
+\item{sig_a_sq}{a double indicating the value of \deqn{\sigma^2_A}}
 
-\item{error}{a double indicating the value of \deqn{\sigma^2}}
+\item{error_sq}{a double indicating the value of \deqn{\sigma^2}}
 
 \item{criteria}{a character "D" or "A" indicating the criteria to score on}
 }
@@ -24,5 +24,5 @@ a tree diagram showing the structure of the experiment
 plot_design
 }
 \examples{
-plot_design(n = c(3,4,5), g = 3, sig_a = 2, error = 1, criteria = "D")
+plot_design(n = c(3,4,5), a = 3, sig_a_sq = 2, error_sq = 1, criteria = "D")
 }

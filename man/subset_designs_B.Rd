@@ -4,7 +4,7 @@
 \alias{subset_designs_B}
 \title{subset_designs_B}
 \usage{
-subset_designs_B(data, N, criteria)
+subset_designs_B(data, N)
 }
 \arguments{
 \item{data}{a dataframe of designs generated using generate_designs_B()}
@@ -12,7 +12,7 @@ subset_designs_B(data, N, criteria)
 \item{N}{an integer value representing the total number of experiment design
 points}
 
-\item{criteria}{a character value representing the desired design criteria}
+\item{criteria}{a character value representing the desired design criteria used to calculate relative efficiency}
 }
 \value{
 a data.frame object of balanced designs meeting user specifications
@@ -25,5 +25,7 @@ replications, and ratio of variance components (tau)
 }
 \examples{
 
-designs <- subset_designs_B(N = 100, criteria = "D")
+candidate_designs <- generate_designs_B(ngroups = c(3, 5), nreps = c(5, 10),
+taus = c(1, 2))
+designs <- subset_designs_B(data = candidate_designs, N = 100, criteria = "D")
 }

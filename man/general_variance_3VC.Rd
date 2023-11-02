@@ -4,15 +4,15 @@
 \alias{general_variance_3VC}
 \title{general_variance_3VC}
 \usage{
-general_variance_3VC(N, n_a, n_b, sig_a_sq, sig_b_sq, error_sq)
+general_variance_3VC(N, n_i_dot, n_ij, sig_a_sq, sig_b_sq, error_sq)
 }
 \arguments{
 \item{N}{an integer representing the total number of experimental runs}
 
-\item{n_a}{a vector of integers representing the total number of runs
+\item{n_i_dot}{a vector of integers representing the total number of runs
 at the A level of the model. The elements of the vector should sum to N}
 
-\item{n_b}{a vector of integers representing the number of runs per group
+\item{n_ij}{a vector of integers representing the number of runs per group
 at the B level of the model. The elements of the vector should sum to N}
 
 \item{sig_a_sq}{a double representing the estimate of \deqn{\sigma^2_A}}
@@ -31,10 +31,10 @@ in a nested ANOVA model with three variance components: \deqn{\sigma^2_A},
 }
 \examples{
 # Balanced design
-general_variance_3VC(N = 8, n_a = c(4, 4), n_b = c(2, 2, 2, 2),
+general_variance_3VC(N = 8, n_i_dot = c(4, 4), n_ij = c(2, 2, 2, 2),
 sig_a_sq = 0.5, sig_b_sq = 2, error_sq = 1)
 
 # Unbalanced design
-general_variance_3VC(N = 9, n_a = c(4, 5), n_b = c(2, 3, 1, 2, 1),
+general_variance_3VC(N = 9, n_i_dot = c(4, 5), n_ij = c(2, 3, 1, 2, 1),
 sig_a_sq = 0.5, sig_b_sq = 2, error_sq = 1)
 }

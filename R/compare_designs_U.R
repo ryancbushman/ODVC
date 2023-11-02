@@ -13,16 +13,22 @@
 #' @export
 #'
 #' @examples
-#' candidates <- generate_designs_U(N = 20, a = 5, sig_a = 2, criteria = "D", error = 1)
+#' candidates <- generate_designs_U(N = 20, a = 5, sig_a_sq = 2, criteria = "D", error = 1)
 #' compare_designs_U(data = candidates, criteria = "D")
 compare_designs_U <- function(data, criteria) {
+  if (criteria == "D") {
+    relative.efficiency = data$Relative.D.Efficiency
+  } else {
+    relative.efficiency = data$Relative.A.Efficiency
+  }
   ggplot(data = data, aes(y = relative.efficiency,
                           x = seq_along(relative.efficiency))) +
-    geom_point() +
-    geom_text(aes(label = seq_along(relative.efficiency)), vjust = -0.5, size = 2.5) +
+    geom_point(size = 4) +
+    geom_text(aes(label = seq_along(relative.efficiency)), vjust = -0.5, size = 4) +
     xlab("Dataset Index") +
     ylab(paste0(criteria, " Relative Efficiency")) +
     ggtitle(paste0("Comparing Relative Efficiency Across Unbalanced Designs of size ", data$N[1])) +
-    geom_abline(slope = 0, intercept = 90, color = "red")
+    geom_abline(slope = 0, intercept = 90, color = "red") +
+    scale_x_continuous(breaks = pretty_breaks())
 }
 

@@ -7,7 +7,6 @@
 #' @param nreps a vector of integers specifying the number of replications per
 #' group
 #' @param taus a vector of doubles specifying the ratio of the variance components
-#' @param criteria a character "D" or "A" specifying the criteria measure
 #'
 #' @return a dataframe of potential designs
 #' @export
@@ -15,31 +14,35 @@
 #' @examples
 #'
 #' candidate_designs <- generate_designs_B(ngroups = c(3, 5), nreps = c(5, 10),
-#' taus = c(1, 2), criteria = "D")
+#' taus = c(1, 2))
 #'
 generate_designs_B <- function(ngroups = c(5, 10), nreps = c(5, 10),
-                               taus = c(1, 2), criteria = "D"){
+                               taus = c(1, 2)){
 
   iterations <- length(ngroups) * length(nreps) * length(taus)
   balanced_designs <- data.frame("N" = double(iterations),
                                  "a" = double(iterations),
                                  "n" = character(iterations),
                                  "tau" = character(iterations),
-                                 "Criteria" = double(iterations),
-                                 "Score" = double(iterations),
-                                 "Cross Score" = double(iterations))
+                                 "A_Score" = double(iterations),
+                                 "D_Score" = double(iterations),
+                                 "Relative.A.Efficiency" = double(iterations),
+                                 "Relative.D.Efficiency" = double(iterations))
+                                 # "Criteria" = double(iterations),
+                                 # "Score" = double(iterations),
+                                 # "Cross Score" = double(iterations))
 
-  if (criteria == "D") {
-    crit = D_crit
-  } else {
-    crit = A_crit
-  }
-
-  if (criteria == "D") {
-    cross_crit = A_crit
-  } else {
-    cross_crit = D_crit
-  }
+  # if (criteria == "D") {
+  #   crit = D_crit
+  # } else {
+  #   crit = A_crit
+  # }
+  #
+  # if (criteria == "D") {
+  #   cross_crit = A_crit
+  # } else {
+  #   cross_crit = D_crit
+  # }
   count = 0
 
   for (i in seq_along(ngroups)) {
@@ -51,19 +54,33 @@ generate_designs_B <- function(ngroups = c(5, 10), nreps = c(5, 10),
         balanced_designs$a[count] <- ngroups[i]
         balanced_designs$n[count] <- nreps[j]
         balanced_designs$tau[count] <- taus[k]
-        balanced_designs$Criteria[count] <- "D"
-        balanced_designs$Score[count] <- crit(one_way_cov_B(
-          error = 1,
-          tau = taus[k],
+        #balanced_designs$Criteria[count] <- "D"
+        # balanced_designs$Score[count] <- crit(one_way_cov_B(
+        #   error = 1,
+        #   tau = taus[k],
+        #   a = ngroups[i],
+        #   n = nreps[j]))
+        # balanced_designs$Cross.Score[count] <- cross_crit(one_way_cov_B(
+        #   error = 1,
+        #   tau = taus[k],
+        #   a = ngroups[i],
+        #   n = nreps[j]))
+        balanced_designs$A_Score[count] <- A_crit(general_variance_2VC(
+          N = ngroups[i] * nreps[j],
+          n = nreps[j],
           a = ngroups[i],
-          n = nreps[j]))
-        balanced_designs$Cross.Score[count] <- cross_crit(one_way_cov_B(
-          error = 1,
-          tau = taus[k],
+          sig_a_sq = taus[k],
+          error_sq = 1))
+        balanced_designs$D_Score[count] <- D_crit(general_variance_2VC(
+          N = ngroups[i] * nreps[j],
+          n = nreps[j],
           a = ngroups[i],
-          n = nreps[j]))
+          sig_a_sq = taus[k],
+          error_sq = 1))
       }
     }
   }
+  balanced_designs$Relative.A.Efficiency <- 100 * min(balanced_designs$A_Score) / balanced_designs$A_Score
+  balanced_designs$Relative.D.Efficiency <- 100 * min(balanced_designs$D_Score) / balanced_designs$D_Score
   return(balanced_designs)
 }

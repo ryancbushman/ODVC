@@ -5,10 +5,10 @@
 \title{plot_design_2}
 \usage{
 plot_design_2(
-  g,
-  g_x,
-  rep_x,
-  n_a,
+  a,
+  b_i,
+  n_ij,
+  n_i_dot,
   sig_a_sq,
   sig_b_sq,
   error_sq,
@@ -17,21 +17,21 @@ plot_design_2(
 )
 }
 \arguments{
-\item{g}{an integer representing the number of groups}
+\item{a}{an integer representing the number of groups}
 
-\item{g_x}{a vector representing the number of subgroups for each group}
+\item{b_i}{a vector representing the number of subgroups for each group}
 
-\item{rep_x}{a vector representing the number of replications in each
+\item{n_ij}{a vector representing the number of replications in each
 sub-group}
 
-\item{n_a}{a vector representing the number of total replications in each
+\item{n_i_dot}{a vector representing the number of total replications in each
 group}
 
-\item{sig_a_sq}{a double representing the estimate of \deqn{\sigma^2_A}}
+\item{sig_a_sq}{a double representing the hypothesized value of \eqn{\sigma^2_A}}
 
-\item{sig_b_sq}{a double representing the estimate of \deqn{\sigma^2_B}}
+\item{sig_b_sq}{a double representing the hypothesized value of \eqn{\sigma^2_B}}
 
-\item{error_sq}{a double representing the estimate of \dqn{\sigma^2}}
+\item{error_sq}{a double representing the hypothesized value of \eqn{\sigma^2}}
 
 \item{balanced}{a logical TRUE or FALSE indicating whether the design is
 balanced or not}
@@ -44,14 +44,14 @@ a ggraph ggplot object
 }
 \description{
 plot_design_2 plots a dendrogram representation of the design of a user
-specified experiment.
+specified two-way nested random effects experiment.
 }
 \examples{
 # Balanced design
-plot_design_2(g = 2, g_x = c(2,2), rep_x = c(2,2,2,2), n_a = c(4, 4),
+plot_design_2(a = 2, b_i = c(2,2), n_ij = c(2,2,2,2), n_i_dot = c(4, 4),
 sig_a_sq = 2, sig_b_sq = 3, error_sq = 1, balanced = TRUE, criteria = "D")
 
 # Unbalanced design
-plot_design_2(g = 2, g_x = c(2,3), rep_x = c(2,3,1,2,3), n_a = c(5, 6),
+plot_design_2(a = 2, b_i = c(2,3), n_ij = c(2,3,1,2,3), n_i_dot = c(5, 6),
 sig_a_sq = 2, sig_b_sq = 3, error_sq = 1, balanced = FALSE, criteria = "D")
 }

@@ -21,7 +21,7 @@
 #' group to cross with number of groups
 #' @param taus a vector of doubles indicating the number of values of tau to
 #' cross with the number of crossed groups by replications
-#' @param error a double indicating the estimated residual error of the model
+#' @param error_sq a double indicating the estimated residual error of the model
 #' @param criteria a character "D" or "A" indicating which design criteria to
 #' use
 #'
@@ -35,13 +35,13 @@
 #' candidate_designs <- contour_designs_B(ngroups = c(10, 20),
 #'                                         nreps = c(10, 20),
 #'                                         taus = c(0.5, 1, 2),
-#'                                         error = 1,
+#'                                         error_sq = 1,
 #'                                         criteria = "D")
 #'
 contour_designs_B <- function(ngroups = c(5, 10, 20, 30),
                               nreps = c(5, 10, 20),
                               taus = c(0.5, 1, 2, 5),
-                              error = 1, criteria = "D"){
+                              error_sq = 1, criteria = "D"){
 
   iterations <- (length(ngroups) * length(nreps) * length(taus))
   balanced_contours_scores <- vector(mode = "list", length = iterations)
@@ -64,10 +64,10 @@ contour_designs_B <- function(ngroups = c(5, 10, 20, 30),
         grid <- expand.grid(x, y, stringsAsFactors = FALSE)
         grid$z <- numeric((ngroups[i]-1) * (nreps[j] - 1))
         for (l in seq_along(grid$z)) {
-          grid$z[l] <- crit(one_way_cov_B(error = 1,
-                                                            tau = taus[k],
-                                                            grid[l, 1],
-                                                            grid[l, 2]))
+          grid$z[l] <- crit(one_way_cov_B(error_sq = 1,
+                                          tau = taus[k],
+                                          grid[l, 1],
+                                          grid[l, 2]))
         }
         OD_score <- as.double(tail(grid, n=1)[3])
         grid$releff <- (OD_score / grid$z) * 100
@@ -75,34 +75,33 @@ contour_designs_B <- function(ngroups = c(5, 10, 20, 30),
         contour_score <-  suppressMessages(
           print(
             ggplot(grid) +
-             geom_contour_filled(data = grid,
-                                 aes(x = Var1, y = Var2,
-                                     z = as.double(z)), color = "black") +
-             xlim(0, ngroups[i]) +
-             ylim(0, nreps[j]) +
-             xlab("Number of Groups") +
-             ylab("Reps per Group") +
-             scale_x_continuous(breaks = seq(0, ngroups[i], 2)) +
-             scale_y_continuous(breaks = seq(0, nreps[j], 2)) +
-             geom_abline(slope = 1, intercept = 0, color = "red") +
-             ggtitle(paste0("D score when Tau = ", taus[k]))))
+              geom_contour_filled(data = grid,
+                                  aes(x = Var1, y = Var2,
+                                      z = as.double(z)), color = "black") +
+              xlim(0, ngroups[i]) +
+              ylim(0, nreps[j]) +
+              xlab("Number of Groups") +
+              ylab("Reps per Group") +
+              scale_x_continuous(breaks = seq(0, ngroups[i], 2)) +
+              scale_y_continuous(breaks = seq(0, nreps[j], 2)) +
+              geom_abline(slope = 1, intercept = 0, color = "red") +
+              ggtitle(paste0("D score when Tau = ", taus[k]))))
 
         contour_releff <- suppressMessages(print(ggplot(grid) +
-          geom_contour_filled(data = grid,
-                              aes(x = Var1, y = Var2,
-                                  z = as.double(releff)), color = "black") +
-          xlim(0, ngroups[i]) +
-          ylim(0, nreps[j]) +
-          xlab("Number of Groups") +
-          ylab("Reps per Group") +
-          scale_x_continuous(breaks = seq(0, ngroups[i], 2)) +
-          scale_y_continuous(breaks = seq(0, nreps[j], 2)) +
-          geom_abline(slope = 1, intercept = 0, color = "red") +
-          ggtitle(paste0("Relative Efficiency when Tau = ", taus[k]))))
+                                                   geom_contour_filled(data = grid,
+                                                                       aes(x = Var1, y = Var2,
+                                                                           z = as.double(releff)), color = "black") +
+                                                   xlim(0, ngroups[i]) +
+                                                   ylim(0, nreps[j]) +
+                                                   xlab("Number of Groups") +
+                                                   ylab("Reps per Group") +
+                                                   scale_x_continuous(breaks = seq(0, ngroups[i], 2)) +
+                                                   scale_y_continuous(breaks = seq(0, nreps[j], 2)) +
+                                                   geom_abline(slope = 1, intercept = 0, color = "red") +
+                                                   ggtitle(paste0("Relative Efficiency when Tau = ", taus[k]))))
 
         balanced_contours_scores[[count]] <- contour_score
         balanced_contours_releff[[count]] <- contour_releff
-
       }
     }
   }

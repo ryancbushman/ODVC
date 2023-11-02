@@ -4,12 +4,7 @@
 \alias{generate_designs_B}
 \title{generate_designs_B}
 \usage{
-generate_designs_B(
-  ngroups = c(5, 10),
-  nreps = c(5, 10),
-  taus = c(1, 2),
-  criteria = "D"
-)
+generate_designs_B(ngroups = c(5, 10), nreps = c(5, 10), taus = c(1, 2))
 }
 \arguments{
 \item{ngroups}{a vector of integers specifying the number of groups}
@@ -18,8 +13,6 @@ generate_designs_B(
 group}
 
 \item{taus}{a vector of doubles specifying the ratio of the variance components}
-
-\item{criteria}{a character "D" or "A" specifying the criteria measure}
 }
 \value{
 a dataframe of potential designs
@@ -31,6 +24,6 @@ specified parameters.
 \examples{
 
 candidate_designs <- generate_designs_B(ngroups = c(3, 5), nreps = c(5, 10),
-taus = c(1, 2), criteria = "D")
+taus = c(1, 2))
 
 }

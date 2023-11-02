@@ -4,7 +4,7 @@
 \alias{general_variance_2VC}
 \title{general_variance_2VC}
 \usage{
-general_variance_2VC(N, n, g, sig_a_sq, error_sq)
+general_variance_2VC(N, n, a, sig_a_sq, error_sq)
 }
 \arguments{
 \item{N}{an integer representing the total number of experimental runs}
@@ -14,7 +14,7 @@ number of runs per group. If a single integer is used, then the experiment is
 treated as a balanced design. If a vector is used, the user can specify
 unbalanced replications for the groups}
 
-\item{g}{an integer representing the number of groups}
+\item{a}{an integer representing the number of groups}
 
 \item{sig_a_sq}{a double representing the estimate of \deqn{\sigma^2_A}}
 
@@ -30,8 +30,8 @@ in a nested ANOVA model with two variance components: \deqn{\sigma^2_A} and
 }
 \examples{
 # Balanced design
-general_variance_2VC(N = 8, n = 2, g = 4, sig_a_sq = 2, error_sq = 1)
+general_variance_2VC(N = 8, n = 2, a = 4, sig_a_sq = 2, error_sq = 1)
 
 # Unbalanced design
-general_variance_2VC(N = 8, n = c(2, 3, 3), g = 3, sig_a_sq = 2, error_sq = 1)
+general_variance_2VC(N = 8, n = c(2, 3, 3), a = 3, sig_a_sq = 2, error_sq = 1)
 }

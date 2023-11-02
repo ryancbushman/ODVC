@@ -1,4 +1,4 @@
-generate_designs_2VC_B <- function(N, n, g, sig_a_sq, error_sq, criteria) {
+generate_designs_2VC_B <- function(n, a, sig_a_sq, error_sq, criteria) {
   balanced_designs <- data.frame("N" = double(10000),
                                  "a" = double(10000),
                                  "n" = character(10000),
@@ -20,29 +20,29 @@ generate_designs_2VC_B <- function(N, n, g, sig_a_sq, error_sq, criteria) {
   }
   count = 0
 
-  for (i in seq_along(g)) {
+  for (i in seq_along(a)) {
     for (j in seq_along(n)) {
       for (k in seq_along(sig_a_sq)) {
         count = count + 1
         if (length(n[[j]]) == 1) {
-          balanced_designs$N[count] <- g[i] * n[[j]]
+          balanced_designs$N[count] <- a[i] * n[[j]]
         } else {
           balanced_designs$N[count] <- sum(n[[j]])
         }
-        balanced_designs$a[count] <- g[i]
+        balanced_designs$a[count] <- a[i]
         balanced_designs$n[count] <- paste(as.character(n[[j]]), collapse = " ")
         balanced_designs$tau[count] <- sig_a_sq[k]
         balanced_designs$criteria[count] <- "D"
         balanced_designs$score[count] <- crit(general_variance_2VC(
-          N = N,
+          N = sum(n[[j]]),
           n = n[[j]],
-          g = g[i],
+          a = a[i],
           sig_a_sq = sig_a_sq[k],
           error_sq = error_sq))
         balanced_designs$cross.score[count] <- cross_crit(general_variance_2VC(
-          N = N,
+          N = sum(n[[j]]),
           n = n[[j]],
-          g = g[i],
+          a = a[i],
           sig_a_sq = sig_a_sq[k],
           error_sq = error_sq))
       }

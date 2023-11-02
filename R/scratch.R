@@ -1,5 +1,13 @@
-# # library(ggplot2)
-# # library(gridExtra)
+library(devtools)
+library(ggplot2)
+library(gridExtra)
+library(partitions)
+library(igraph)
+library(ggraph)
+library(statespacer)
+library(gtools)
+library(scales)
+
 # #
 # # # Balanced Data
 # #
@@ -519,120 +527,125 @@
 # test2 <- solve(trial)
 
 # My function is close to the output of the searle dispersion matrix, but the elements are mixed around
-
-der_V_sig_a_sq <- function(n, g, sig_a_sq) {
-  kronecker(diag(1, g), matrix(rep(1, n * n), nrow = n, ncol = n))
-}
-
-J_n <- function(n) {
-  (1 / n) * matrix(rep(1, n * n), nrow = n, ncol = n)
-}
-
-V <- function(n, g, sig_a_sq, error_sq) {
-  first <- diag(1, nrow = g)
-  second <- (n * sig_a_sq) * J_n(n)
-  third <- error_sq * diag(1, nrow = n)
-  kronecker(first, (second + third))
-}
-
-Hes3 <- function(n, g, sig_a_sq, error_sq) {
-  temp_V <- V(n = n, g = g, sig_a_sq = sig_a_sq, error_sq = error_sq)
-  temp_der <- der_V_sig_a_sq(n = n, g = g, sig_a_sq = sig_a_sq)
-  t_l <- (1 / 2) * sum(diag(solve(temp_V) %*% solve(temp_V)))
-  t_r <- (1 / 2) * sum(diag(solve(temp_V) %*% temp_der %*% solve(temp_V)))
-  b_l <- (1 / 2) * sum(diag(solve(temp_V) %*% solve(temp_V) %*% temp_der))
-  b_r <- (1 / 2) * sum(diag(solve(temp_V) %*% temp_der %*% solve(temp_V) %*% temp_der))
-
-  matrix(c(t_l, t_r, b_l, b_r), nrow = 2, ncol = 2)
-}
-
-Hes3(n = 10, g = 15, sig_a_sq = 5, error_sq = 1)
-solve(one_way_cov_B(error = 1, tau = 5, a = 15, n = 10))
-
-# I think I got my derivative of V with respect to sig_sq_A wrong. Factor out the 1/n from J_n and the derivative would just be kronecker(I_g, J_n)
 #
-# n_children <- 4
-# max_depth <- 3
-# regular_n <- 60#sum(n_children^c(0:max_depth))
-# regular_org <- tidygraph::create_tree(n = regular_n, children = n_children)
-# ggraph(regular_org, 'dendrogram') + geom_edge_diagonal() +
-#   geom_node_point(shape = 21, size = 2, fill = 'white') + theme_bw()
+# der_V_sig_a_sq <- function(n, g, sig_a_sq) {
+#   kronecker(diag(1, g), matrix(rep(1, n * n), nrow = n, ncol = n))
+# }
 #
-# a = 4
-# b = c(2, 1, 2, 1)
-# d = c(1, 2, 3, 4, 5, 6)
+# J_n <- function(n) {
+#   (1 / n) * matrix(rep(1, n * n), nrow = n, ncol = n)
+# }
 #
-# groups <- data.frame(from="origin", to=paste("group", seq(1, a), sep=""))
-# reps_per_groups1 <- data.frame(from=rep(groups$to, b),
-#                               to=paste("rep", seq(1,sum(b)), sep="_"))
-# reps_per_groups2 <- data.frame(from=rep(reps_per_groups1$from, d), to = paste("rep", seq(b+1, b+sum(d)), sep = "_"))
-# edges <- rbind(groups, reps_per_groups1, reps_per_groups2)
+# V <- function(n, g, sig_a_sq, error_sq) {
+#   first <- diag(1, nrow = g)
+#   second <- (n * sig_a_sq) * J_n(n)
+#   third <- error_sq * diag(1, nrow = n)
+#   kronecker(first, (second + third))
+# }
 #
-# name <- unique(c(as.character(edges$from), as.character(edges$to)))
-# vertices <- data.frame(
-#   name=name,
-#   group=c( rep(NA, g + 1) , rep(paste("group", seq(1, g), sep=""), n))
-# )
+# Hes3 <- function(n, g, sig_a_sq, error_sq) {
+#   temp_V <- V(n = n, g = g, sig_a_sq = sig_a_sq, error_sq = error_sq)
+#   temp_der <- der_V_sig_a_sq(n = n, g = g, sig_a_sq = sig_a_sq)
+#   t_l <- (1 / 2) * sum(diag(solve(temp_V) %*% solve(temp_V)))
+#   t_r <- (1 / 2) * sum(diag(solve(temp_V) %*% temp_der %*% solve(temp_V)))
+#   b_l <- (1 / 2) * sum(diag(solve(temp_V) %*% solve(temp_V) %*% temp_der))
+#   b_r <- (1 / 2) * sum(diag(solve(temp_V) %*% temp_der %*% solve(temp_V) %*% temp_der))
 #
-# mygraph <- graph_from_data_frame( edges, vertices=vertices)
+#   matrix(c(t_l, t_r, b_l, b_r), nrow = 2, ncol = 2)
+# }
 #
-# ggraph(mygraph, layout = "dendrogram", circular = FALSE) + geom_edge_elbow()
+# Hes3(n = 10, g = 15, sig_a_sq = 5, error_sq = 1)
+# solve(one_way_cov_B(error = 1, tau = 5, a = 15, n = 10))
 #
-# from = c("origin", "origin", "group1", "group1", "group2", "group2", "group1_1",
-#          "group1_1", "group1_2", "group1_2", "group2_1", "group2_1", "group2_2", "group2_2")
-# to = c("group1", "group2", "group1_1", "group1_2", "group2_1", "group2_2", "rep1", "rep2", "rep3", "rep4", "rep5",
-#        "rep6", "rep7", "rep8")
-# edges_test = data.frame(first = from, second = to)
+# # I think I got my derivative of V with respect to sig_sq_A wrong. Factor out the 1/n from J_n and the derivative would just be kronecker(I_g, J_n)
+# #
+# # n_children <- 4
+# # max_depth <- 3
+# # regular_n <- 60#sum(n_children^c(0:max_depth))
+# # regular_org <- tidygraph::create_tree(n = regular_n, children = n_children)
+# # ggraph(regular_org, 'dendrogram') + geom_edge_diagonal() +
+# #   geom_node_point(shape = 21, size = 2, fill = 'white') + theme_bw()
+# #
+# # a = 4
+# # b = c(2, 1, 2, 1)
+# # d = c(1, 2, 3, 4, 5, 6)
+# #
+# # groups <- data.frame(from="origin", to=paste("group", seq(1, a), sep=""))
+# # reps_per_groups1 <- data.frame(from=rep(groups$to, b),
+# #                               to=paste("rep", seq(1,sum(b)), sep="_"))
+# # reps_per_groups2 <- data.frame(from=rep(reps_per_groups1$from, d), to = paste("rep", seq(b+1, b+sum(d)), sep = "_"))
+# # edges <- rbind(groups, reps_per_groups1, reps_per_groups2)
+# #
+# # name <- unique(c(as.character(edges$from), as.character(edges$to)))
+# # vertices <- data.frame(
+# #   name=name,
+# #   group=c( rep(NA, g + 1) , rep(paste("group", seq(1, g), sep=""), n))
+# # )
+# #
+# # mygraph <- graph_from_data_frame( edges, vertices=vertices)
+# #
+# # ggraph(mygraph, layout = "dendrogram", circular = FALSE) + geom_edge_elbow()
+# #
+# # from = c("origin", "origin", "group1", "group1", "group2", "group2", "group1_1",
+# #          "group1_1", "group1_2", "group1_2", "group2_1", "group2_1", "group2_2", "group2_2")
+# # to = c("group1", "group2", "group1_1", "group1_2", "group2_1", "group2_2", "rep1", "rep2", "rep3", "rep4", "rep5",
+# #        "rep6", "rep7", "rep8")
+# # edges_test = data.frame(first = from, second = to)
+# #
+# # name = c("origin", "group1", "group2", "group1_1", "group1_2", "group2_1",
+# #          "group2_2", "rep1", "rep2", "rep3", "rep4", "rep5",
+# #          "rep6", "rep7", "rep8")
+# # group = c(NA, NA, NA, "group1", "group1", "group2", "group2", "group1_1",
+# #           "group1_1", "group1_2", "group1_2", "group2_1", "group2_1",
+# #           "group2_2", "group2_2")
+# # vertices_test <- data.frame(third = name, fourth = group)
+# #
+# # test_graph <- graph_from_data_frame(edges_test, vertices = vertices_test)
+# # ggraph(test_graph, layout = "dendrogram", circular = FALSE) + geom_edge_elbow()
 #
-# name = c("origin", "group1", "group2", "group1_1", "group1_2", "group2_1",
-#          "group2_2", "rep1", "rep2", "rep3", "rep4", "rep5",
-#          "rep6", "rep7", "rep8")
-# group = c(NA, NA, NA, "group1", "group1", "group2", "group2", "group1_1",
-#           "group1_1", "group1_2", "group1_2", "group2_1", "group2_1",
-#           "group2_2", "group2_2")
-# vertices_test <- data.frame(third = name, fourth = group)
+# # Attempting to verify using row 1 of table 4.2 from Delgado Dissertation, pg 81
+# test <- general_variance_3VC(16, c(4, 4, 4, 4), c(2, 2, 2, 2, 2, 2, 2, 2), 1, 1, 8)
+# test1 <- matrix(c(test[1,1],
+#                   test[1,2] / 0.125,
+#                   test[1,3] / 0.125,
+#                   test[1,2] / 0.125,
+#                   test[2,2] / 0.125^2,
+#                   test[2,3] / 0.125^2,
+#                   test[1,3] / 0.125,
+#                   test[2,2] / 0.125^2,
+#                   test[3,3] / 0.125^2), nrow = 3, ncol = 3, byrow = TRUE)
+# 16 * A_crit(test1)
 #
-# test_graph <- graph_from_data_frame(edges_test, vertices = vertices_test)
-# ggraph(test_graph, layout = "dendrogram", circular = FALSE) + geom_edge_elbow()
-
-# Attempting to verify using row 1 of table 4.2 from Delgado Dissertation, pg 81
-test <- general_variance_3VC(16, c(4, 4, 4, 4), c(2, 2, 2, 2, 2, 2, 2, 2), 1, 1, 8)
-test1 <- matrix(c(test[1,1],
-                  test[1,2] / 0.125,
-                  test[1,3] / 0.125,
-                  test[1,2] / 0.125,
-                  test[2,2] / 0.125^2,
-                  test[2,3] / 0.125^2,
-                  test[1,3] / 0.125,
-                  test[2,2] / 0.125^2,
-                  test[3,3] / 0.125^2), nrow = 3, ncol = 3, byrow = TRUE)
-16 * A_crit(test1)
-
-plot_design_2(4, c(2, 2, 2, 2), c(2, 2, 2, 2, 2, 2, 2, 2), c(4, 4, 4, 4), 1, 1, 8, TRUE, "D")
-
-test <- general_variance_2VC(120, 8, 15, 1, 8)
-D_crit(test)
-
-c_i <- 2
-a <- 2
-n <- 4
-sig_a_sq <- 1
-sig_b_sq <- 1
-error_sq <- 1
-x <- a*(c_i - 1) / (n*sig_b_sq + error_sq)^2
-y <- a / (c_i * n * sig_a_sq + n * sig_b_sq + error_sq)^2
-z = a * c_i * (n - 1) / error_sq^2
-
-T_mat <- matrix(c(c_i^2 * n^2 *y,
-                  c_i * n^2 * y,
-                  c_i * n * y,
-                  c_i * n^2 * y,
-                  n^2 * (x + y),
-                  n * (x + y),
-                  c_i * n * y,
-                  n * (x + y),
-                  x + y + z), nrow = 3, ncol = 3, byrow = TRUE)
-T_mat
-solve(T_mat)
-general_variance_3VC(8, c(4, 4), c(2, 2, 2, 2), 1, 1, 1)
-solve(general_variance_3VC(8, c(4, 4), c(2, 2, 2, 2), 1, 1, 1))
+# plot_design_2(4, c(2, 2, 2, 2), c(2, 2, 2, 2, 2, 2, 2, 2), c(4, 4, 4, 4), 1, 1, 8, TRUE, "D")
+#
+# test <- general_variance_2VC(120, 8, 15, 1, 8)
+# D_crit(test)
+#
+# c_i <- 2
+# a <- 2
+# n <- 4
+# sig_a_sq <- 1
+# sig_b_sq <- 1
+# error_sq <- 1
+# x <- a*(c_i - 1) / (n*sig_b_sq + error_sq)^2
+# y <- a / (c_i * n * sig_a_sq + n * sig_b_sq + error_sq)^2
+# z = a * c_i * (n - 1) / error_sq^2
+#
+# T_mat <- matrix(c(c_i^2 * n^2 *y,
+#                   c_i * n^2 * y,
+#                   c_i * n * y,
+#                   c_i * n^2 * y,
+#                   n^2 * (x + y),
+#                   n * (x + y),
+#                   c_i * n * y,
+#                   n * (x + y),
+#                   x + y + z), nrow = 3, ncol = 3, byrow = TRUE)
+# T_mat
+# solve(T_mat)
+# general_variance_3VC(8, c(4, 4), c(2, 2, 2, 2), 1, 1, 1)
+# solve(general_variance_3VC(8, c(4, 4), c(2, 2, 2, 2), 1, 1, 1))
+#
+#
+# ######## generate_designs_3VC_U Scratch Code ##############################
+#
+#

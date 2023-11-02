@@ -9,7 +9,7 @@
 #' number of runs per group. If a single integer is used, then the experiment is
 #' treated as a balanced design. If a vector is used, the user can specify
 #' unbalanced replications for the groups
-#' @param g an integer representing the number of groups
+#' @param a an integer representing the number of groups
 #' @param sig_a_sq a double representing the estimate of \deqn{\sigma^2_A}
 #' @param error_sq a double representing the estimate of \deqn{\sigma^2}
 #'
@@ -18,14 +18,14 @@
 #'
 #' @examples
 #' # Balanced design
-#' general_variance_2VC(N = 8, n = 2, g = 4, sig_a_sq = 2, error_sq = 1)
+#' general_variance_2VC(N = 8, n = 2, a = 4, sig_a_sq = 2, error_sq = 1)
 #'
 #' # Unbalanced design
-#' general_variance_2VC(N = 8, n = c(2, 3, 3), g = 3, sig_a_sq = 2, error_sq = 1)
-general_variance_2VC <- function(N, n, g, sig_a_sq, error_sq) {
+#' general_variance_2VC(N = 8, n = c(2, 3, 3), a = 3, sig_a_sq = 2, error_sq = 1)
+general_variance_2VC <- function(N, n, a, sig_a_sq, error_sq) {
   MLE_var <- matrix(rep(0, 4), nrow = 2, ncol = 2)
   if (length(n) == 1) {
-    derivatives <- list(diag(1, N), kronecker(diag(1, g), matrix(rep(1, n^2), nrow = n, ncol = n)))
+    derivatives <- list(diag(1, N), kronecker(diag(1, a), matrix(rep(1, n^2), nrow = n, ncol = n)))
   } else {
     J_s <- vector(mode = "list", length = length(n))
     for (k in seq_along(n)) {
@@ -33,7 +33,7 @@ general_variance_2VC <- function(N, n, g, sig_a_sq, error_sq) {
     }
     derivatives <- list(diag(1, N), do.call(BlockMatrix, J_s))
   }
-  temp_V <- V_2VC(n = n, g = g, sig_a_sq = sig_a_sq, error_sq = error_sq)
+  temp_V <- V_2VC(n = n, a = a, sig_a_sq = sig_a_sq, error_sq = error_sq)
   for (i in seq_along(derivatives)) {
     for (j in seq_along(derivatives)) {
       MLE_var[i, j] <- (1 / 2) * sum(diag(solve(temp_V) %*% derivatives[[j]] %*% solve(temp_V) %*% derivatives[[i]]))

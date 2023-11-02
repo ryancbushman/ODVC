@@ -4,7 +4,7 @@
 \alias{one_way_cov_U}
 \title{one_way_cov_U}
 \usage{
-one_way_cov_U(N, a, n_i, sig_a, error)
+one_way_cov_U(N, a, n_i, sig_a_sq, error_sq)
 }
 \arguments{
 \item{N}{an integer number of total design points in the experiment}
@@ -13,9 +13,9 @@ one_way_cov_U(N, a, n_i, sig_a, error)
 
 \item{n_i}{a vector of doubles representing the number of replications per group}
 
-\item{sig_a}{a double representing the estimate of \deqn{\sigma^2_A}}
+\item{sig_a_sq}{a double representing the estimate of \deqn{\sigma^2_A}}
 
-\item{error}{a double representing the residual mean error}
+\item{error_sq}{a double representing the residual mean error}
 }
 \value{
 the maximum likelihood estimator covariance matrix for a user
@@ -30,6 +30,6 @@ experiments.
 }
 \examples{
 
-information <- one_way_cov_U(N = 10, a = 4, n_i = c(1,2,3,4), sig_a = 2, error = 1)
+information <- one_way_cov_U(N = 10, a = 4, n_i = c(1,2,3,4), sig_a_sq = 2, error_sq = 1)
 
 }

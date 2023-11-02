@@ -4,7 +4,7 @@
 \alias{generate_designs_U}
 \title{Title}
 \usage{
-generate_designs_U(N, a, sig_a, criteria, error)
+generate_designs_U(N, a, sig_a_sq, error_sq)
 }
 \arguments{
 \item{N}{an integer representing the total number of design points}
@@ -26,6 +26,6 @@ a dataframe of experiment designs of size N
 Title
 }
 \examples{
-candidates <- generate_designs_U(N = 20, a = 4, sig_a = 2, criteria = "D",
+candidates <- generate_designs_U(N = 20, a = 4, sig_a_sq = 2, criteria = "D",
 error = 1)
 }
