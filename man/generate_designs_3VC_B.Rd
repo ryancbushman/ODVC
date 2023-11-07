@@ -13,19 +13,19 @@ generate_designs_3VC_B(a, n_i_dot, n_ij, sig_a_sq, sig_b_sq, error_sq)
 
 \item{n_ij}{a list of integer vectors that represent how many replications belong to each of the groups at the B level}
 
-\item{sig_a_sq}{a vector of doubles representing estimates of \deqn{\sigma^2_A}}
+\item{sig_a_sq}{a vector of doubles representing estimates of \eqn{\sigma^2_A}}
 
-\item{sig_b_sq}{a vector of doubles representing estimates of \deqn{\sigma^2_B}}
+\item{sig_b_sq}{a vector of doubles representing estimates of \eqn{\sigma^2_B}}
 
-\item{error_sq}{a vector of doubles representing estimates of \deqn{\sigma^2}}
+\item{error_sq}{a vector of doubles representing estimates of \eqn{\sigma^2}}
 }
 \value{
 a dataframe of candidate designs
 }
 \description{
 generate_designs_3VC_B generates a dataset of candidates experiment designs
-for nested models with three variance components: \deqn{\sigma^2_A},
-\deqn{\sigma^2_B}, and \deqn{\sigma^2}. Note that the input for arguments
+for nested models with three variance components: \eqn{\sigma^2_A},
+\eqn{\sigma^2_B}, and \eqn{\sigma^2}. Note that the input for arguments
 g, n_i_dot, and n_ij, should be the same length. Additionally they should the index
 for each input should correspond with each other.
 }

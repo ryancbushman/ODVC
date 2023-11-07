@@ -27,5 +27,5 @@ replications, and ratio of variance components (tau)
 
 candidate_designs <- generate_designs_B(ngroups = c(3, 5), nreps = c(5, 10),
 taus = c(1, 2))
-designs <- subset_designs_B(data = candidate_designs, N = 100, criteria = "D")
+designs <- subset_designs_B(data = candidate_designs, N = 50)
 }

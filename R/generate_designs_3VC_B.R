@@ -1,17 +1,17 @@
 #' generate_designs_3VC_B
 #'
 #' generate_designs_3VC_B generates a dataset of candidates experiment designs
-#' for nested models with three variance components: \deqn{\sigma^2_A},
-#' \deqn{\sigma^2_B}, and \deqn{\sigma^2}. Note that the input for arguments
+#' for nested models with three variance components: \eqn{\sigma^2_A},
+#' \eqn{\sigma^2_B}, and \eqn{\sigma^2}. Note that the input for arguments
 #' g, n_i_dot, and n_ij, should be the same length. Additionally they should the index
 #' for each input should correspond with each other.
 #'
 #' @param a a vector of integers that represent group sizes
 #' @param n_i_dot a list of integer vectors that represent how many total replications belong to each of the groups at the A level
 #' @param n_ij a list of integer vectors that represent how many replications belong to each of the groups at the B level
-#' @param sig_a_sq a vector of doubles representing estimates of \deqn{\sigma^2_A}
-#' @param sig_b_sq a vector of doubles representing estimates of \deqn{\sigma^2_B}
-#' @param error_sq a vector of doubles representing estimates of \deqn{\sigma^2}
+#' @param sig_a_sq a vector of doubles representing estimates of \eqn{\sigma^2_A}
+#' @param sig_b_sq a vector of doubles representing estimates of \eqn{\sigma^2_B}
+#' @param error_sq a vector of doubles representing estimates of \eqn{\sigma^2}
 #'
 #' @return a dataframe of candidate designs
 #' @export

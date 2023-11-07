@@ -17,23 +17,23 @@
 #'
 #' candidate_designs <- generate_designs_B(ngroups = c(3, 5), nreps = c(5, 10),
 #' taus = c(1, 2))
-#' designs <- subset_designs_B(data = candidate_designs, N = 100, criteria = "D")
+#' designs <- subset_designs_B(data = candidate_designs, N = 50)
 
 subset_designs_B <- function(data, N) {
   data <- data[which(data$N == N), ]
-  data$releff_A <- numeric(length(data$N))
-  data$releff_D <- numeric(length(data$N))
+  data$Relative.A.Efficiency <- numeric(length(data$N))
+  data$Relative.D.Efficiency <- numeric(length(data$N))
   for (i in unique(data$tau)) {
     temp <- data[data$tau == i, ]
 
     OD_D <- temp[which.min(temp$D_Score), ]
-    releff_D <- 100 * OD_D$D_Score / temp$D_Score
+    Relative.D.Efficiency <- 100 * OD_D$D_Score / temp$D_Score
 
     OD_A <- temp[which.min(temp$A_Score), ]
-    releff_A <- 100 * OD_A$A_Score / temp$A_Score
+    Relative.A.Efficiency <- 100 * OD_A$A_Score / temp$A_Score
 
-    data[data$tau == i, ]$releff_A <- releff_A
-    data[data$tau == i, ]$releff_D <- releff_D
+    data[data$tau == i, ]$Relative.A.Efficiency <- Relative.A.Efficiency
+    data[data$tau == i, ]$Relative.D.Efficiency <- Relative.D.Efficiency
   }
   return(data)
 }
