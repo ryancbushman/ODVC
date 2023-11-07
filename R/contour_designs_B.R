@@ -64,10 +64,14 @@ contour_designs_B <- function(ngroups = c(5, 10, 20, 30),
         grid <- expand.grid(x, y, stringsAsFactors = FALSE)
         grid$z <- numeric((ngroups[i]-1) * (nreps[j] - 1))
         for (l in seq_along(grid$z)) {
-          grid$z[l] <- crit(one_way_cov_B(error_sq = 1,
-                                          tau = taus[k],
-                                          grid[l, 1],
-                                          grid[l, 2]))
+          grid$z[l] <- crit(general_variance_2VC(N = grid[l, 1] * grid[l, 2],
+                                                 n = grid[l, 2], a = grid[l, 1],
+                                                 sig_a_sq = taus[k],
+                                                 error_sq = 1))
+          # grid$z[l] <- crit(one_way_cov_B(error_sq = 1,
+          #                                 tau = taus[k],
+          #                                 grid[l, 1],
+          #                                 grid[l, 2]))
         }
         OD_score <- as.double(tail(grid, n=1)[3])
         grid$releff <- (OD_score / grid$z) * 100

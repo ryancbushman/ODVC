@@ -15,19 +15,19 @@ at the A level of the model. The elements of the vector should sum to N}
 \item{n_ij}{a vector of integers representing the number of runs per group
 at the B level of the model. The elements of the vector should sum to N}
 
-\item{sig_a_sq}{a double representing the estimate of \deqn{\sigma^2_A}}
+\item{sig_a_sq}{a double representing the estimate of \eqn{\sigma^2_A}}
 
-\item{sig_b_sq}{a double representing the estimate of \deqn{\sigma^2_B}}
+\item{sig_b_sq}{a double representing the estimate of \eqn{\sigma^2_B}}
 
-\item{error_sq}{a double representing the estimate of \deqn{\sigma^2}}
+\item{error_sq}{a double representing the estimate of \eqn{\sigma^2}}
 }
 \value{
 the covariance matrix of the model's maximum likelihood estimators
 }
 \description{
 general_variance_3VC returns the MLE covariance matrix for optimization
-in a nested ANOVA model with three variance components: \deqn{\sigma^2_A},
-\deqn{\sigma^2_B}, and \deqn{\sigma^2}
+in a nested ANOVA model with three variance components: \eqn{\sigma^2_A},
+\eqn{\sigma^2_B}, and \eqn{\sigma^2}
 }
 \examples{
 # Balanced design

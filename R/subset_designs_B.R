@@ -35,15 +35,5 @@ subset_designs_B <- function(data, N) {
     data[data$tau == i, ]$releff_A <- releff_A
     data[data$tau == i, ]$releff_D <- releff_D
   }
-
-  # if (criteria == "D") {
-  #   OD <- data[which.min(data$D_Score), ]
-  #   data$releff <- 100 * OD$D_Score / data$D_Score
-  # } else if (criteria == "A") {
-  #   OD <- data[which.min(data$A_Score), ]
-  #   data$releff <- 100 * OD$A_Score / data$A_Score
-  # }
-
-
   return(data)
 }

@@ -30,14 +30,14 @@ generate_two_way_designs <- function(N, s, sig_a_sq, sig_b_sq, error_sq) {
     n_i_dot <- list(4, 3, 2, 2, 1) # number of total reps per level of alpha
     n_ij <- list(c(2, 2), c(2, 1), c(1, 1), 2, 1) # number of reps per level of beta nested in alpha
 
-    ind <- combinations(n = 6, r = max_atoms, v = 0:5, repeats.allowed = TRUE) # all designs with up to max number of atoms
+    ind <- gtools::combinations(n = 6, r = max_atoms, v = 0:5, repeats.allowed = TRUE) # all designs with up to max number of atoms
   } else if (s == 3) {
     n_i_dot <- list(9, 8, 7, 7, 6, 5, 6, 5, 4, 3, 6, 5, 4, 4, 3, 2, 3, 2, 1)
     n_ij <- list(c(3, 3, 3), c(3, 3, 2), c(3, 3, 1), c(3, 2, 2),
                  c(3, 2, 1), c(3, 1, 1), c(2, 2, 2), c(2, 2, 1), c(2, 1, 1),
                  c(1, 1, 1), c(3, 3), c(3, 2), c(3, 1), c(2, 2), c(2, 1), c(1, 1),
                  3, 2, 1)
-    ind <- combinations(n = 20, r = max_atoms, v = 0:19, repeats.allowed = TRUE)
+    ind <- gtools::combinations(n = 20, r = max_atoms, v = 0:19, repeats.allowed = TRUE)
   }
   design_dots <- list()
   design_reps <- list()
@@ -111,7 +111,8 @@ info_3VC <- function(N, n_i_dot, n_ij, sig_a_sq, sig_b_sq, error_sq) {
   for (j in seq_along(n_ij)) {
     J_b[[j]] <- n_ij[j] * J_n(n_ij[j])
   }
-  derivatives <- list(do.call(BlockMatrix, J_a), do.call(BlockMatrix, J_b), diag(1, N))
+  derivatives <- list(do.call(statespacer::BlockMatrix, J_a),
+                      do.call(statespacer::BlockMatrix, J_b), diag(1, N))
   temp_var <- V_3VC(N, n_i_dot, n_ij, sig_a_sq, sig_b_sq, error_sq)
   for (i in seq_along(derivatives)) {
     for (j in seq_along(derivatives)) {

@@ -29,6 +29,6 @@ compare_designs_U <- function(data, criteria) {
     ylab(paste0(criteria, " Relative Efficiency")) +
     ggtitle(paste0("Comparing Relative Efficiency Across Unbalanced Designs of size ", data$N[1])) +
     geom_abline(slope = 0, intercept = 90, color = "red") +
-    scale_x_continuous(breaks = pretty_breaks())
+    scale_x_continuous(breaks = scales::pretty_breaks())
 }
 

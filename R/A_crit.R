@@ -10,7 +10,7 @@
 #'
 #' @examples
 #'
-#' M <- one_way_cov_B(error = 1, tau = 1, a = 10, n = 20)
+#' M <- general_variance_2VC(N = 20, n = 4, a = 5, sig_a_sq = 1, error_sq = 1)
 #' score <- A_crit(M)
 #'
 A_crit <- function(M) {

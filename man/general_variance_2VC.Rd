@@ -16,17 +16,17 @@ unbalanced replications for the groups}
 
 \item{a}{an integer representing the number of groups}
 
-\item{sig_a_sq}{a double representing the estimate of \deqn{\sigma^2_A}}
+\item{sig_a_sq}{a double representing the estimate of \eqn{\sigma^2_A}}
 
-\item{error_sq}{a double representing the estimate of \deqn{\sigma^2}}
+\item{error_sq}{a double representing the estimate of \eqn{\sigma^2}}
 }
 \value{
 the covariance matrix of the model's maximum likelihood estimators
 }
 \description{
 general_variance_2VC returns the MLE covariance matrix for optimization
-in a nested ANOVA model with two variance components: \deqn{\sigma^2_A} and
-\deqn{\sigma^2}
+in a nested ANOVA model with two variance components: \eqn{\sigma^2_A} and
+\eqn{\sigma^2}
 }
 \examples{
 # Balanced design

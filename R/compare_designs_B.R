@@ -10,6 +10,7 @@
 #' function subset_designs_B()
 #'
 #' @return a dashboard of ggplot objects
+#' @import ggplot2
 #' @export
 #'
 #' @examples
@@ -32,7 +33,7 @@ compare_designs_B <- function(designs, criteria){
            x = "Number of Groups",
            y = paste0("Standardized D Score"),
            color = "tau") +
-      scale_x_continuous(breaks = pretty_breaks())
+      scale_x_continuous(breaks = scales::pretty_breaks())
       #geom_text(aes(label = round(D_Score, 2)), size = 3.5,
                # position = position_dodge2(width = 1, preserve = "single"), vjust = -0.1)
 
@@ -42,7 +43,7 @@ compare_designs_B <- function(designs, criteria){
            x = "Number of Groups",
            y = paste0("D Relative Efficiency"),
            color = "tau") +
-      scale_x_continuous(breaks = pretty_breaks())
+      scale_x_continuous(breaks = scales::pretty_breaks())
       #geom_text(aes(label = round(Relative.D.Efficiency, 2)), size = 3.5,
                 #position = position_dodge2(width = 1, preserve = "single"), vjust = -0.1)
 
@@ -72,7 +73,7 @@ compare_designs_B <- function(designs, criteria){
         labs(title = paste0("Relative Efficiency of Designs with Tau = ", taus[l])) +
         ylab("Relative Efficiency") +
         xlab("Number of Groups") +
-        scale_x_continuous(breaks = pretty_breaks()) +
+        scale_x_continuous(breaks = scales::pretty_breaks()) +
         theme(plot.title = element_text(size=10),
               axis.title = element_text(size = 10))
     }
@@ -84,7 +85,7 @@ compare_designs_B <- function(designs, criteria){
       grob[[m + 2]] <- tau_plots[[m]]
     }
 
-    grid.arrange(grobs = grob, ncol = 2)
+    gridExtra::grid.arrange(grobs = grob, ncol = 2)
   } else {
     c_plot <- ggplot(data = designs, aes(x = a, y = A_Score, fill = tau)) +
       geom_bar(stat = "identity", position = position_dodge()) +
@@ -92,7 +93,7 @@ compare_designs_B <- function(designs, criteria){
            x = "Number of Groups",
            y = paste0("Standardized A Score"),
            color = "tau") +
-      scale_x_continuous(breaks = pretty_breaks())
+      scale_x_continuous(breaks = scales::pretty_breaks())
       #geom_text(aes(label = round(A_Score, 2)), size = 3.5,
                 #position = position_dodge2(width = 1, preserve = "single"), vjust = -0.1)
 
@@ -102,7 +103,7 @@ compare_designs_B <- function(designs, criteria){
            x = "Number of Groups",
            y = "A Relative Efficiency",
            color = "tau") +
-      scale_x_continuous(breaks = pretty_breaks())
+      scale_x_continuous(breaks = scales::pretty_breaks())
       #geom_text(aes(label = round(Relative.A.Efficiency, 2)), size = 3.5,
                 #position = position_dodge2(width = 1, preserve = "single"), vjust = -0.1)
 
@@ -132,7 +133,7 @@ compare_designs_B <- function(designs, criteria){
         labs(title = paste0("Relative Efficiency of Designs with Tau = ", taus[l])) +
         ylab("Relative Efficiency") +
         xlab("Number of Groups") +
-        scale_x_continuous(breaks = pretty_breaks()) +
+        scale_x_continuous(breaks = scales::pretty_breaks()) +
         theme(plot.title = element_text(size=10),
               axis.title = element_text(size = 10))
     }
@@ -144,7 +145,7 @@ compare_designs_B <- function(designs, criteria){
       grob[[m + 2]] <- tau_plots[[m]]
     }
 
-    grid.arrange(grobs = grob, ncol = 2)
+    gridExtra::grid.arrange(grobs = grob, ncol = 2)
   }
 }
 

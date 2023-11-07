@@ -29,23 +29,31 @@ plot_design <- function(n, a, sig_a_sq, error_sq, criteria) {
     group=c( rep(NA, a + 1), rep(paste("group", seq(1, a), sep=""), n))
   )
 
-  mygraph <- graph_from_data_frame(edges, vertices=vertices)
+  mygraph <- igraph::graph_from_data_frame(edges, vertices=vertices)
 
   if (length(unique(n)) > 1) {
     title <- paste0("Unbalanced experiment with ", a, " groups")
-    info <- one_way_cov_U(sum(n), a, n, sig_a_sq, error_sq)
+    info <- general_variance_2VC(N = sum(n),
+                                 n = n,
+                                 a = a,
+                                 sig_a_sq = sig_a_sq, error_sq = error_sq)
+    #info <- one_way_cov_U(sum(n), a, n, sig_a_sq, error_sq)
     score <- crit(info)
   } else {
     title <- paste0("Balanced experiment with ", a,
                     " groups and ", n[1], " reps per group")
-    info <- one_way_cov_B(error_sq = error_sq, tau = (sig_a_sq / error_sq), a = a, n = n[1])
+    info <- general_variance_2VC(N = n * a,
+                                 n = n,
+                                 a = a,
+                                 sig_a_sq = sig_a_sq, error_sq = error_sq)
+    #info <- one_way_cov_B(error_sq = error_sq, tau = (sig_a_sq / error_sq), a = a, n = n[1])
     score <- crit(info)
   }
 
-  ggraph(mygraph, layout = 'dendrogram', circular = FALSE) +
-    geom_edge_elbow() +
+  ggraph::ggraph(mygraph, layout = 'dendrogram', circular = FALSE) +
+    ggraph::geom_edge_elbow() +
     ggtitle(title) +
-    geom_node_point(aes(filter=leaf, size = 2, color=group) , alpha=0.6) +
+    ggraph::geom_node_point(aes(filter=leaf, size = 2, color=group) , alpha=0.6) +
     theme_void() +
     theme(legend.position="none") +
     labs(caption = paste0(criteria, " Score: ", signif(score, 6))) +

@@ -64,7 +64,7 @@ plot_design_2 <- function(a, b_i, n_ij, n_i_dot, sig_a_sq, sig_b_sq, error_sq, b
     name=name,
     group=c(rep(NA, a + 1), v_second, v_third))
 
-  mygraph <- graph_from_data_frame(edges, vertices = vertices)
+  mygraph <- igraph::graph_from_data_frame(edges, vertices = vertices)
 
   if (balanced == FALSE) {
     title <- paste0("Unbalanced experiment with ", a, " groups")
@@ -80,10 +80,10 @@ plot_design_2 <- function(a, b_i, n_ij, n_i_dot, sig_a_sq, sig_b_sq, error_sq, b
                                error_sq = error_sq)
   score <- crit(info)
 
-  ggraph(mygraph, layout = 'dendrogram', circular = FALSE) +
-    geom_edge_elbow() +
+  ggraph::ggraph(mygraph, layout = 'dendrogram', circular = FALSE) +
+    ggraph::geom_edge_elbow() +
     ggtitle(title) +
-    geom_node_point(aes(filter=leaf, size = 2, color=group) , alpha=0.6) +
+    ggraph::geom_node_point(aes(filter=leaf, size = 2, color=group) , alpha=0.6) +
     labs(caption = paste0(criteria, " Score: ", signif(score, 6))) +
     theme_void() +
     theme(legend.position="none")

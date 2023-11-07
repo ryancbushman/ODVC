@@ -26,22 +26,7 @@ generate_designs_U <- function(N, a, sig_a_sq, error_sq){
                                    "sig_a_sq" = character(10000000),
                                    "A_Score" = double(10000000),
                                    "D_Score" = double(10000000))
-                                   # "criteria" = character(10000),
-                                   # "score" = double(10000),
-                                   # "cross score" = double(10000),
-                                   # "relative efficiency" = double(10000))
 
-  # if (criteria == "D") {
-  #   crit = D_crit
-  # } else {
-  #   crit = A_crit
-  # }
-  #
-  # if (criteria == "D") {
-  #   cross_crit = A_crit
-  # } else {
-  #   cross_crit = D_crit
-  # }
 
   reps <- partitions::restrictedparts(n = N, m = a, include.zero = FALSE)
   # reps <- getCols(parts(N), A = a, N = N)
@@ -52,16 +37,12 @@ generate_designs_U <- function(N, a, sig_a_sq, error_sq){
     for (j in 1:ncol(reps)) {
       count = count + 1
       info <- general_variance_2VC(N = N, n = reps[, j], a = a, sig_a_sq = sig_a_sq[i], error_sq = 1)
-      #info <- one_way_cov_U(N = N, a = a, n_i = reps[, j], sig_a_sq[i], error)
       unbalanced_designs$N[count] = N
       unbalanced_designs$a[count] = a
       unbalanced_designs$n_i[count] = paste(as.character(reps[1:a, j]), collapse = " ")
       unbalanced_designs$sig_a_sq[count] = sig_a_sq[i]
-      #unbalanced_designs$criteria[count] = criteria
       unbalanced_designs$A_Score[count] <- A_crit(info)
       unbalanced_designs$D_Score[count] <- D_crit(info)
-      #unbalanced_designs$score[count] = crit(info)
-      #unbalanced_designs$cross.score[count] = cross_crit(info)
     }
   }
   unbalanced_designs <- unbalanced_designs[unbalanced_designs$N != 0, ]
@@ -80,7 +61,5 @@ generate_designs_U <- function(N, a, sig_a_sq, error_sq){
     unbalanced_designs[unbalanced_designs$sig_a_sq == i, ]$Relative.A.Efficiency <- Relative.A.Efficiency
     unbalanced_designs[unbalanced_designs$sig_a_sq == i, ]$Relative.D.Efficiency <- Relative.D.Efficiency
   }
-
-  #unbalanced_designs$relative.efficiency = 100 *  min(unbalanced_designs$score) / unbalanced_designs$score
   return(unbalanced_designs)
 }
