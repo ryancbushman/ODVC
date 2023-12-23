@@ -23,7 +23,7 @@ compare_designs_U <- function(data, criteria) {
   }
   ggplot(data = data, aes(y = relative.efficiency,
                           x = seq_along(relative.efficiency))) +
-    geom_point(size = 4) +
+    geom_point(size = 1) +
     geom_text(aes(label = seq_along(relative.efficiency)), vjust = -0.5, size = 4) +
     xlab("Dataset Index") +
     ylab(paste0(criteria, " Relative Efficiency")) +

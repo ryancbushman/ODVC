@@ -24,7 +24,7 @@ compare_designs_B <- function(designs, criteria){
     designs$A_Score[designs$tau == i] = designs$A_Score[designs$tau == i] / sd(designs$A_Score[designs$tau == i])
   }
 
-  designs$tau <- with(candidates,factor(tau,levels = (unique(tau))))
+  designs$tau <- with(designs, factor(tau,levels = (unique(tau))))
 
   if (criteria == "D") {
     c_plot <- ggplot(data = designs, aes(x = a, y = D_Score, fill = tau)) +

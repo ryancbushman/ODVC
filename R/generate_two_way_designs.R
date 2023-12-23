@@ -124,3 +124,117 @@ info_3VC <- function(N, n_i_dot, n_ij, sig_a_sq, sig_b_sq, error_sq) {
   }
   return(MLE_var)
 }
+
+generate_data <- function(N, s) {
+  max_atoms <- N - 2
+  if (s == 2) { # C_3,2 class has 5 atoms, see Delgado
+    n_i_dot <- list(4, 3, 2, 2, 1) # number of total reps per level of alpha
+    n_ij <- list(c(2, 2), c(2, 1), c(1, 1), 2, 1) # number of reps per level of beta nested in alpha
+
+    ind <- gtools::combinations(n = 6, r = max_atoms, v = 0:5, repeats.allowed = TRUE) # all designs with up to max number of atoms
+  } else if (s == 3) {
+    n_i_dot <- list(9, 8, 7, 7, 6, 5, 6, 5, 4, 3, 6, 5, 4, 4, 3, 2, 3, 2, 1)
+    n_ij <- list(c(3, 3, 3), c(3, 3, 2), c(3, 3, 1), c(3, 2, 2),
+                 c(3, 2, 1), c(3, 1, 1), c(2, 2, 2), c(2, 2, 1), c(2, 1, 1),
+                 c(1, 1, 1), c(3, 3), c(3, 2), c(3, 1), c(2, 2), c(2, 1), c(1, 1),
+                 3, 2, 1)
+    ind <- gtools::combinations(n = 20, r = max_atoms, v = 0:19, repeats.allowed = TRUE)
+  }
+  design_dots <- list()
+  design_reps <- list()
+  for (i in seq_len(nrow(ind))) { # apply indices to n_i_dot and n_ij to get designs
+    design_dots[[i]] <- unlist(n_i_dot[ind[i, ]])
+    design_reps[[i]] <- unlist(n_ij[ind[i, ]])
+  }
+  design_dots <- design_dots[-which(sapply(design_dots, sum) != N)]
+  design_reps <- design_reps[-which(sapply(design_reps, sum) != N)]
+
+  final_indices <- numeric()
+  count = 0
+  for (i in seq_along(design_dots)) {
+    count = count + 1
+    if (rcond(info_3VC(N = N,
+                       n_i_dot = design_dots[[i]],
+                       n_ij = design_reps[[i]],
+                       sig_a_sq = 1,
+                       sig_b_sq = 1,
+                       error_sq = 1)) > (.Machine$double.eps)^(0.5)) {
+      final_indices <- c(final_indices, count)
+    }
+  }
+  #final_indices <- which(D_score != 0)
+  designs <- data.frame("N" = rep(N, length(design_dots[final_indices])),
+                        "N_i_dot" = as.character(design_dots[final_indices]),
+                        "N_ij" = as.character(design_reps[final_indices]))
+  return(designs)
+}
+
+generate_two_way_designs_90 <- function(N, s, sig_a_sq, sig_b_sq, error_sq) {
+  max_atoms <- N - 2
+  if (s == 2) { # C_3,2 class has 5 atoms, see Delgado
+    n_i_dot <- list(4, 3, 2, 2, 1) # number of total reps per level of alpha
+    n_ij <- list(c(2, 2), c(2, 1), c(1, 1), 2, 1) # number of reps per level of beta nested in alpha
+
+    ind <- gtools::combinations(n = 6, r = max_atoms, v = 0:5, repeats.allowed = TRUE) # all designs with up to max number of atoms
+  } else if (s == 3) {
+    n_i_dot <- list(9, 8, 7, 7, 6, 5, 6, 5, 4, 3, 6, 5, 4, 4, 3, 2, 3, 2, 1)
+    n_ij <- list(c(3, 3, 3), c(3, 3, 2), c(3, 3, 1), c(3, 2, 2),
+                 c(3, 2, 1), c(3, 1, 1), c(2, 2, 2), c(2, 2, 1), c(2, 1, 1),
+                 c(1, 1, 1), c(3, 3), c(3, 2), c(3, 1), c(2, 2), c(2, 1), c(1, 1),
+                 3, 2, 1)
+    ind <- gtools::combinations(n = 20, r = max_atoms, v = 0:19, repeats.allowed = TRUE)
+  }
+  design_dots <- list()
+  design_reps <- list()
+  for (i in seq_len(nrow(ind))) { # apply indices to n_i_dot and n_ij to get designs
+    design_dots[[i]] <- unlist(n_i_dot[ind[i, ]])
+    design_reps[[i]] <- unlist(n_ij[ind[i, ]])
+  }
+  design_dots <- design_dots[-which(sapply(design_dots, sum) != N)]
+  design_reps <- design_reps[-which(sapply(design_reps, sum) != N)]
+
+  A_score <- numeric(length = length(design_dots))
+  D_score <- numeric(length = length(design_dots))
+  for (i in seq_len(length(design_dots))){
+    if (det(info_3VC(N = N,
+                     n_i_dot = design_dots[[i]],
+                     n_ij = design_reps[[i]],
+                     sig_a_sq = sig_a_sq,
+                     sig_b_sq = sig_b_sq,
+                     error_sq = error_sq)) > (.Machine$double.eps)^(0.5)) {
+      D_score[i] <- D_crit(general_variance_3VC(N = N,
+                                                n_i_dot = design_dots[[i]],
+                                                n_ij = design_reps[[i]],
+                                                sig_a_sq = sig_a_sq,
+                                                sig_b_sq = sig_b_sq,
+                                                error_sq = error_sq))
+      A_score[i] <- A_crit(general_variance_3VC(N = N,
+                                                n_i_dot = design_dots[[i]],
+                                                n_ij = design_reps[[i]],
+                                                sig_a_sq = sig_a_sq,
+                                                sig_b_sq = sig_b_sq,
+                                                error_sq = error_sq))
+
+    }
+  }
+  # final_indices <- which(D_score != 0)
+  D_score <- D_score[D_score != 0]
+  A_score <- A_score[A_score != 0]
+
+  Releff_A <- 100 * min(A_score) / A_score
+  Releff_D <- 100 * min(D_score) / D_score
+
+  final_indices <- which(Releff_A >= 90 | Releff_D >= 90)
+
+  designs <- data.frame("N" = rep(N, length(design_dots[final_indices])),
+                        "N_i_dot" = as.character(design_dots[final_indices]),
+                        "N_ij" = as.character(design_reps[final_indices]),
+                        "D_score" = D_score[final_indices],
+                        "Relative D Efficiency" = Releff_D[final_indices],
+                        "A_score" = A_score[final_indices],
+                        "Relative A Efficiency" = Releff_A[final_indices])
+
+  return(designs)
+}
+
+

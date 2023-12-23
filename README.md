@@ -8,7 +8,9 @@
 [![R-CMD-check](https://github.com/ryancbushman/ODVC/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ryancbushman/ODVC/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of ODVC is to …
+The goal of ODVC is to provide tools that allow researchers to do
+optimal design of experiments for one-way and two-way nested random
+effects models.
 
 ## Installation
 
@@ -22,36 +24,95 @@ devtools::install_github("ryancbushman/ODVC")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+We will walk through three example problems that demonstrate the use of
+ODVC tools. The first is the one-way balanced design. The
+generate_designs_B function will create a dataset of designs based on
+all combinations of the provided arguments. The user can then subset the
+dataset with subset_designs_B to see designs of a specific size. Finally
+the user can create a dashboard of plots to compare the performance of
+the subset of designs.
 
 ``` r
-#library(ODVC)
-## basic example code
+library(ODVC)
+
+###### one-way balanced designs ######
+
+ex_1_designs <- generate_designs_B(ngroups = c(2, 3, 4, 6, 8, 12), 
+                                   nreps = c(2, 3, 4, 6, 8, 12), 
+                                   taus = c(1, 2))
+
+ex_1_designs_subset <- subset_designs_B(data = ex_1_designs, N = 24)
+
+compare_designs_B(designs = ex_1_designs_subset, criteria = "A")
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+<img src="man/figures/README-example-1.png" width="100%" /> Once the
+user has seen the dashboard and decided on an appropriate design, they
+can visualize the design using the plot_design function.
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+plot_design(n = rep(3, 8) , a = 8, sig_a_sq = 1, error_sq = 1, criteria = "A")
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/v1/examples>.
+<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" /> If
+the user would like to explore unbalanced one-way designs, they can use
+the generate_designs_U function to generate all unbalanced designs of
+size “N” with “a” number of groups and user provided values for and .
+The user can then visualize the performance of the generated datasets
+using the compare_designs_U function.
 
-You can also embed plots, for example:
+``` r
 
-<img src="man/figures/README-pressure-1.png" width="100%" />
+##### one-way unbalanced designs #####
 
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+ex_2_designs <- generate_designs_U(N = 24, a = 3, sig_a_sq = 2, error_sq = 1)
+
+compare_designs_U(data = ex_2_designs, criteria = "A")
+```
+
+<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
+
+Once the user selects the desired design, they can visualize it using
+the plot_design function.
+
+``` r
+plot_design(n = c(9, 8, 7), a = 3, sig_a_sq = 2, error_sq = 1, criteria = "A")
+```
+
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" /> Due
+to the combinatorial nature of optimal design for random effects models,
+it is too computationally expensive to generate all two-way designs of
+size “N”. Rather, designs are generated from one of two classes called
+and . The first subscript refers to the number of variance components.
+The second subscript refers to the maximum number of subgroups and
+replicates per subgroup. The user can use the generate_two_way_designs
+function to generate all designs of size “N” within the preferred class
+using “s” argument to indicate the second subscript. Once the dataset
+has been generated, the user can use the compare_designs_U function to
+compare performance.
+
+``` r
+
+##### two_way designs #####
+
+ex_3_designs <- generate_two_way_designs(N = 12, s = 2, sig_a_sq = 0.1,
+                                         sig_b_sq = 2, error_sq = 1)
+
+compare_designs_U(ex_3_designs, criteria = "A")
+```
+
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+
+Upon choosing the desired experiment design, the user can reference
+dataset of designs and provide arguments for the plot_design_2 function.
+
+``` r
+plot_design_2(a = 4, b_i = c(2, 2, 2, 2), n_ij = c(2, 2, 2, 2, 1, 1, 1, 1),
+              n_i_dot = c(4, 4, 2, 2), sig_a_sq = 0.1, sig_b_sq = 2, 
+              error_sq = 1, criteria = "A", balanced = FALSE)
+```
+
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" /> For
+more information on how this package can be used to solve optimal design
+problems for nested random-effects models, please reference the provided
+vignettes and documentation.
