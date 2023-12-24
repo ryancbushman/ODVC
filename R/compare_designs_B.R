@@ -33,7 +33,7 @@ compare_designs_B <- function(designs, criteria){
            x = "Number of Groups",
            y = paste0("Standardized D Score"),
            color = "tau") +
-      scale_x_continuous(breaks = scales::pretty_breaks())
+      scale_x_continuous(breaks = scales::pretty_breaks()) # swap cont. for discrete
       #geom_text(aes(label = round(D_Score, 2)), size = 3.5,
                # position = position_dodge2(width = 1, preserve = "single"), vjust = -0.1)
 
