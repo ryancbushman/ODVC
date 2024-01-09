@@ -15,9 +15,6 @@ generate_designs_U(N, a, sig_a_sq, error_sq)
 to try}
 
 \item{error_sq}{a double representing the value of \eqn{\sigma^2}}
-
-\item{criteria}{a character "D" or "A" to indicate the design criteria to
-score on}
 }
 \value{
 a data.frame of experiment designs of size N

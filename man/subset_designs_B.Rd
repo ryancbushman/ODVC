@@ -11,8 +11,6 @@ subset_designs_B(data, N)
 
 \item{N}{an integer value representing the total number of experiment design
 points}
-
-\item{criteria}{a character value representing the desired design criteria used to calculate relative efficiency}
 }
 \value{
 a data.frame object of balanced designs meeting user specifications
