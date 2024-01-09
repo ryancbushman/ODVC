@@ -4,12 +4,21 @@ Version: 0.0.0.9000
 Authors@R: 
     person("Ryan", "Bushman", , "ryan.c.bushman@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-9278-2000"))
-Description: This package allows a user to compare designs from catalogs of both 
-    balanced and unbalanced experiments from models in which the variance 
-    components are the effects of interst. These experiments are scored on both 
-    the 'A' and 'D' criteria. The user can generate contour plots that allow 
-    them to compare designs of various parameter selections such that they can 
-    choose the most quality cost effective design
+Description: This package includes tools that allow users to do optimal design 
+  of experiments for balanced and unbalanced one-way and two-way nested random 
+  effects models. Optimal design for random effects is inherently different than 
+  optimal design for fixed effects. The information matrix for a random effects 
+  model is a function of the experiment's sample sizes and variance components. 
+  Rather than using an optimization algorithm to explore the parameter space, 
+  one must generate all designs (or a tractable subset of designs) as a function 
+  of the parameters and score them to find the optimal design. The tools 
+  provided are capable of generating datasets of designs, scoring the designs on
+  both the "A" and "D" criteria, and calculating relative efficiency. The 
+  datasets generated make it easy to find the optimal design and comparably well
+  performing designs. The tools provided allow the user to explore how the 
+  optimal design changes based on the hypothesized (or rarely but ideally known)
+  values of the variance components. There are also valuable visualization tools
+  designed to help create figures for publication or research purposes.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

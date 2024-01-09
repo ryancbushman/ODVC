@@ -8,7 +8,6 @@
 #' @param data a dataframe of designs generated using generate_designs_B()
 #' @param N an integer value representing the total number of experiment design
 #' points
-#' @param criteria a character value representing the desired design criteria used to calculate relative efficiency
 #'
 #' @return a data.frame object of balanced designs meeting user specifications
 #' @export

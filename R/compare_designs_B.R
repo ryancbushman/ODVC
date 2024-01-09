@@ -9,14 +9,18 @@
 #' @param designs a data.frame object of designs of size N returned by the
 #' function subset_designs_B()
 #'
+#' @param criteria a string value, either "D" or "A", to indicate which
+#' optimality criteria to score designs on
+#'
 #' @return a dashboard of ggplot objects
 #' @import ggplot2
 #' @export
 #'
 #' @examples
-#'
-#' candidate_designs <- subset_designs_B(N = 100, criteria = "D")
-#' compare_designs_B(designs = candidate_designs)
+#' candidate_designs <- generate_designs_B(ngroups = c(2, 3, 4, 6),
+#' nreps = c(2, 3, 4, 6), taus = c(1, 2))
+#' candidate_designs <- subset_designs_B(data = candidate_designs, N = 12)
+#' compare_designs_B(designs = candidate_designs, criteria = "D")
 #'
 compare_designs_B <- function(designs, criteria){
   for (i in unique(designs$tau)) {

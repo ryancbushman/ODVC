@@ -9,8 +9,6 @@
 #' @param a an integer representing the total number of groups
 #' @param sig_a_sq a vector of doubles representing the values of \eqn{\sigma^2_A}
 #' to try
-#' @param criteria a character "D" or "A" to indicate the design criteria to
-#' score on
 #' @param error_sq a double representing the value of \eqn{\sigma^2}
 #'
 #' @return a data.frame of experiment designs of size N
