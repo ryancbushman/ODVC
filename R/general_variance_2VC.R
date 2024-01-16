@@ -23,6 +23,31 @@
 #' # Unbalanced design
 #' general_variance_2VC(N = 8, n = c(2, 3, 3), a = 3, sig_a_sq = 2, error_sq = 1)
 general_variance_2VC <- function(N, n, a, sig_a_sq, error_sq) {
+  if (N %% 1 != 0) {
+    stop("N must be an integer")
+  }
+  if (!(all(n == floor(n)))) {
+    stop("All entries of n must be integers")
+  }
+  if (a %% 1 != 0) {
+    stop("The argument a must be an integer")
+  }
+  if (length(n) == 1) {
+    if (n * a != N) {
+      stop("a single value for the argument n suggests that n * a must equal N")
+    }
+  }
+  if (length(n) != 1) {
+    if (sum(n) != N) {
+      stop("The values in the argument n must sum to equal N")
+    }
+  }
+  if (!is.numeric(sig_a_sq)) {
+    stop("sig_a_sq must be a numeric value")
+  }
+  if (!is.numeric(error_sq)) {
+    stop("error_sq must be a numeric value")
+  }
   MLE_var <- matrix(rep(0, 4), nrow = 2, ncol = 2)
   if (length(n) == 1) {
     derivatives <- list(diag(1, N), kronecker(diag(1, a), matrix(rep(1, n^2), nrow = n, ncol = n)))

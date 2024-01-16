@@ -16,9 +16,17 @@
 #' candidates <- generate_designs_U(N = 20, a = 5, sig_a_sq = 2, error = 1)
 #' compare_designs_U(data = candidates, criteria = "D")
 compare_designs_U <- function(data, criteria) {
+  if (!is.data.frame(data)) {
+    stop("data must be a dataframe of candidate designs generated using
+         generate_designs_U(), generate_two_way_designs(), or
+         generate_designs_B()")
+  }
+  if (!(criteria %in% c("A", "D"))) {
+    stop("criteria must be either the string A or D")
+  }
   if (criteria == "D") {
     relative.efficiency = data$Relative.D.Efficiency
-  } else {
+  } else if (criteria == "A") {
     relative.efficiency = data$Relative.A.Efficiency
   }
   ggplot(data = data, aes(y = relative.efficiency,

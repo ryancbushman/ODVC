@@ -2,7 +2,7 @@
 #'
 #' A catalog of balanced designs using the one-way ANOVA model
 #'
-#' @format ## `who`
+#' @format ## `Balanced Designs`
 #' A data frame with 96 rows and 7 columns:
 #' \describe{
 #'   \item{N}{total number of experiment runs}

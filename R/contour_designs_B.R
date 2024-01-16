@@ -19,9 +19,10 @@
 #' with number of replications per group
 #' @param nreps a vector of integers indicating the number of replications per
 #' group to cross with number of groups
-#' @param taus a vector of doubles indicating the number of values of tau to
+#' @param taus a vector of doubles indicating the values of tau to
 #' cross with the number of crossed groups by replications
-#' @param error_sq a double indicating the estimated residual error of the model
+#' @param error_sq a double indicating the estimated residual error of the model.
+#' Default value of 1 is strongly encouraged to make tau easy to interpret.
 #' @param criteria a character "D" or "A" indicating which design criteria to
 #' use
 #'
@@ -42,13 +43,31 @@ contour_designs_B <- function(ngroups = c(5, 10, 20, 30),
                               nreps = c(5, 10, 20),
                               taus = c(0.5, 1, 2, 5),
                               error_sq = 1, criteria = "D"){
+  if (!all(floor(ngroups) == ngroups)) {
+    stop("ngroups must be a single integer or vector of integers")
+  }
+  if (!all(nreps == floor(nreps))) {
+    stop("nreps must be a single integer or vector of integers")
+  }
+  if (!is.vector(taus) & !is.numeric(taus)) {
+    stop("taus must be a single numeric or vector of numerics")
+  }
+  if (!is.numeric(error_sq)) {
+    stop("error_sq must be a numeric")
+  }
+  if (length(error_sq) != 1) {
+    stop("error_sq must be a single numeric value")
+  }
+  if (!(criteria %in% c("A", "D"))) {
+    stop("criteria must be either the string A or D")
+  }
 
   iterations <- (length(ngroups) * length(nreps) * length(taus))
   balanced_contours_scores <- vector(mode = "list", length = iterations)
   balanced_contours_releff <- vector(mode = "list", length = iterations)
   if (criteria == "D") {
     crit <- D_crit
-  } else {
+  } else if (criteria == "A") {
     crit <- A_crit
   }
 

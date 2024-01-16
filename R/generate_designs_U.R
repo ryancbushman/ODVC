@@ -17,6 +17,18 @@
 #' @examples
 #' candidates <- generate_designs_U(N = 20, a = 4, sig_a_sq = 2, error_sq = 1)
 generate_designs_U <- function(N, a, sig_a_sq, error_sq){
+  if (N %% 1 != 0) {
+    stop("N must be an integer")
+  }
+  if (a %% 1 != 0) {
+    stop("The argument a must be an integer")
+  }
+  if (!is.numeric(sig_a_sq)) {
+    stop("sig_a_sq must be a numeric value")
+  }
+  if (!is.numeric(error_sq)) {
+    stop("error_sq must be a numeric value")
+  }
 
   unbalanced_designs <- data.frame("N" = double(10000000),
                                    "a" = double(10000000),

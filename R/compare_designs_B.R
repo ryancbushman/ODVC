@@ -23,6 +23,13 @@
 #' compare_designs_B(designs = candidate_designs, criteria = "D")
 #'
 compare_designs_B <- function(designs, criteria){
+  if (!is.data.frame(designs)) {
+    stop("designs must be a data.frame created using the subset_designs_B()
+         function")
+  }
+  if (!(criteria %in% c("A", "D"))) {
+    stop("criteria must be either the string A or D")
+  }
   for (i in unique(designs$tau)) {
     designs$D_Score[designs$tau == i] = designs$D_Score[designs$tau == i] / sd(designs$D_Score[designs$tau == i])
     designs$A_Score[designs$tau == i] = designs$A_Score[designs$tau == i] / sd(designs$A_Score[designs$tau == i])

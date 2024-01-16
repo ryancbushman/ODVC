@@ -12,6 +12,18 @@
 #' @examples
 #' plot_design(n = c(3,4,5), a = 3, sig_a_sq = 2, error_sq = 1, criteria = "D")
 plot_design <- function(n, a, sig_a_sq, error_sq, criteria) {
+  if (a != length(n)) {
+    stop("The length of n must be equal to a")
+  }
+  if (!is.numeric(sig_a_sq)){
+    stop("sig_a_sq must be a numeric value")
+  }
+  if (!is.numeric(error_sq)){
+    stop("error_sq must be a numeric value")
+  }
+  if (!(criteria %in% c("A", "D"))) {
+    stop("criteria must be either the string A or D")
+  }
   if (criteria == "D") {
     crit = D_crit
   } else {

@@ -25,6 +25,21 @@
 #'                                        sig_b_sq = 1, error_sq = 1)
 #'
 generate_two_way_designs <- function(N, s, sig_a_sq, sig_b_sq, error_sq) {
+  if (N %% 1 != 0) {
+    stop("N must be an integer")
+  }
+  if (!(s %in% c(2, 3))) {
+    stop("s must be either the value 2 or 3")
+  }
+  if (!(is.numeric(sig_a_sq))) {
+    stop("sig_a_sq must be a numeric value")
+  }
+  if (!(is.numeric(sig_b_sq))) {
+    stop("sig_b_sq must be a numeric value")
+  }
+  if (!(is.numeric(error_sq))) {
+    stop("error_sq must be a numeric value")
+  }
   max_atoms <- N - 2
   if (s == 2) { # C_3,2 class has 5 atoms, see Delgado
     n_i_dot <- list(4, 3, 2, 2, 1) # number of total reps per level of alpha

@@ -19,10 +19,11 @@ with number of replications per group}
 \item{nreps}{a vector of integers indicating the number of replications per
 group to cross with number of groups}
 
-\item{taus}{a vector of doubles indicating the number of values of tau to
+\item{taus}{a vector of doubles indicating the values of tau to
 cross with the number of crossed groups by replications}
 
-\item{error_sq}{a double indicating the estimated residual error of the model}
+\item{error_sq}{a double indicating the estimated residual error of the model.
+Default value of 1 is strongly encouraged to make tau easy to interpret.}
 
 \item{criteria}{a character "D" or "A" indicating which design criteria to
 use}

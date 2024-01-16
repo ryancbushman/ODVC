@@ -28,7 +28,32 @@
 #' # Unbalanced design
 #' plot_design_2(a = 2, b_i = c(2,3), n_ij = c(2,3,1,2,3), n_i_dot = c(5, 6),
 #' sig_a_sq = 2, sig_b_sq = 3, error_sq = 1, balanced = FALSE, criteria = "D")
-plot_design_2 <- function(a, b_i, n_ij, n_i_dot, sig_a_sq, sig_b_sq, error_sq, balanced, criteria) {
+plot_design_2 <- function(a, b_i, n_ij, n_i_dot, sig_a_sq, sig_b_sq, error_sq,
+                          balanced, criteria) {
+  if (a %% 1 != 0) {
+    stop("The argument a must be an integer")
+  }
+  if (sum(b_i) != length(n_ij)) {
+    stop("The sum of b_i must equal the length of the n_ij vector")
+  }
+  if (sum(n_ij) != sum(n_i_dot)) {
+    stop("The sum of n_ij must equal the sum of n_i_dot")
+  }
+  if (!is.numeric(sig_a_sq)){
+    stop("sig_a_sq must be a numeric value")
+  }
+  if (!is.numeric(sig_b_sq)){
+    stop("sig_a_sq must be a numeric value")
+  }
+  if (!is.numeric(error_sq)){
+    stop("error_sq must be a numeric value")
+  }
+  if (!is.logical(balanced)) {
+    stop("balanced must be either TRUE or FALSE")
+  }
+  if (!(criteria %in% c("A", "D"))) {
+    stop("criteria must be either the string A or D")
+  }
   if (criteria == "D") {
     crit = D_crit
   } else {

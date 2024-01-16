@@ -25,6 +25,27 @@
 #' general_variance_3VC(N = 9, n_i_dot = c(4, 5), n_ij = c(2, 3, 1, 2, 1),
 #' sig_a_sq = 0.5, sig_b_sq = 2, error_sq = 1)
 general_variance_3VC <- function(N, n_i_dot, n_ij, sig_a_sq, sig_b_sq, error_sq) {
+  if (N %% 1 != 0) {
+    stop("N must be an integer")
+  }
+  if (sum(n_i_dot) != N) {
+    stop("The sum of n_i_dot must be equal to N")
+  }
+  if (!(all(n_i_dot == floor(n_i_dot)))) {
+    stop("All entries of n_i_dot must be integers")
+  }
+  if (sum(n_ij) != N) {
+    stop("The sum of n_ij must be equal to N")
+  }
+  if (!is.numeric(sig_a_sq)) {
+    stop("sig_a_sq must be a numeric value")
+  }
+  if (!is.numeric(sig_b_sq)) {
+    stop("sig_a_sq must be a numeric value")
+  }
+  if (!is.numeric(error_sq)) {
+    stop("error_sq must be a numeric value")
+  }
   MLE_var <- matrix(rep(0, 9), nrow = 3, ncol = 3)
   J_a <- vector(mode = "list", length = length(n_i_dot))
   for (i in seq_along(n_i_dot)) {

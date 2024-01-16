@@ -19,6 +19,15 @@
 #' designs <- subset_designs_B(data = candidate_designs, N = 50)
 
 subset_designs_B <- function(data, N) {
+  if (!(is.data.frame(data))) {
+    stop("data must be a dataframe generated from generate_designs_B()")
+  }
+  if (N %% 1 != 0) {
+    stop("N must be an integer")
+  }
+  if (!(N %in% data$N)) {
+    stop("The value of N must be represented in the N column of the data")
+  }
   data <- data[which(data$N == N), ]
   data$Relative.A.Efficiency <- numeric(length(data$N))
   data$Relative.D.Efficiency <- numeric(length(data$N))

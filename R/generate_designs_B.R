@@ -19,6 +19,16 @@
 generate_designs_B <- function(ngroups = c(5, 10), nreps = c(5, 10),
                                taus = c(1, 2)){
 
+  if (!(all(ngroups == floor(ngroups)))) {
+    stop("All values in ngroups vector must be integers")
+  }
+  if (!(all(nreps == floor(nreps)))) {
+    stop("All values in nreps vector must be integers")
+  }
+  if (!is.numeric(taus)) {
+    stop("taus must be a vector of numerics")
+  }
+
   iterations <- length(ngroups) * length(nreps) * length(taus)
   balanced_designs <- data.frame("N" = double(iterations),
                                  "a" = double(iterations),
