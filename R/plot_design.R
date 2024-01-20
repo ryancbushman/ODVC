@@ -54,7 +54,7 @@ plot_design <- function(n, a, sig_a_sq, error_sq, criteria) {
   } else {
     title <- paste0("Balanced experiment with ", a,
                     " groups and ", n[1], " reps per group")
-    info <- general_variance_2VC(N = n * a,
+    info <- general_variance_2VC(N = n[1] * a,
                                  n = n,
                                  a = a,
                                  sig_a_sq = sig_a_sq, error_sq = error_sq)

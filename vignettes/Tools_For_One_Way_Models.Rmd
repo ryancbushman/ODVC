@@ -1,0 +1,113 @@
+---
+title: "Tools For One-Way Models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tools_For_One_Way_Models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ODVC)
+```
+
+If a user would like to explore a wide variety of balanced one-way nested random
+effects designs with many different parameter settings, they can use 
+contour_designs_B function.
+
+```{r}
+contour_plots <- contour_designs_B(ngroups = c(2, 10), nreps = c(2, 10), 
+                                   taus = 2)
+contour_plots[[1]][[4]]
+contour_plots[[2]][[4]]
+
+```
+Once the user narrows down what paremeter settings they would like to explore,
+they can use the generate_designs_B to generate balanced designs.
+
+```{r}
+candidates_B <- generate_designs_B(ngroups = c(2, 3, 4, 6, 8, 12), 
+                                   nreps = c(2, 3, 4, 6, 8, 12),
+                                   taus = c(0.5, 1))
+head(candidates_B)
+```
+
+The subset_designs_B function can be used to select only the designs of a
+particular size.
+
+```{r}
+candidates_B_N24 <- subset_designs_B(data = candidates_B, N = 24)
+head(candidates_B_N24)
+```
+The user can then use the compare_designs_B function to create a dashboard that
+will help them to choose the optimal design.
+
+```{r}
+compare_designs_B(designs = candidates_B_N24, criteria = "A")
+```
+From the dashboard, the user can see that when $\sigma^2_A = 0.5$, the best 
+design when N=24 under the $A$ criteria is the one that has 6 groups. The user
+can now use the plot_design function to visualize the design.
+
+```{r}
+plot_design(n = rep(4, 6), a = 6, sig_a_sq = 0.5, error_sq = 1, criteria = "A")
+```
+
+If the user would like to explore unbalanced designs, they can use the 
+generate_designs_U function.
+
+```{r}
+candidates_U <- generate_designs_U(N = 23, a = 8, sig_a_sq = 0.5, error_sq = 1)
+
+head(candidates_U)
+```
+
+To compare the performance of these designs they can use the compare_designs_U
+function. This generates a scatter plot of relative efficiency and index within
+the design dataframe.
+
+```{r}
+compare_designs_U(data = candidates_U, criteria = "A")
+```
+
+From the plot, it is evident that the best design is the one with index 146 from
+the dataframe. By referencing this row in the dataframe, the user can use the 
+plot_design function to visualize this optimal design.
+
+```{r}
+plot_design(n = c(rep(3, 7), 2), a = 8, sig_a_sq = 0.5, error_sq = 1, 
+            criteria = "A")
+```
+In the optimal design of experiments framework, the goal is to optimize the 
+model information matrix. The inverse of the information matrix is the 
+covariance matrix for the maximum likelihood estimators. By maximizing the 
+information of an experiment on some optimality criteria, one simultaneously 
+minimizes the variance of the maximum likelihood estimators. The information 
+matrix can be scored using optimality criteria such as the $D$ criteria (the 
+determinant) or the $A$ criteria (the trace). The tools of the ODVC package 
+define the optimal design as the design the minimizes the optimality criteria. 
+In a random-effects model, the information matrix is a function of the 
+experiment's sample sizes and the values of the variance components. The user 
+can use the general_variance_2VC function to generate the covariance matrix of 
+the maximum likelihood estimators (the object being optimized) for a particular 
+experiment.
+
+```{r}
+optimal_design <- general_variance_2VC(N = 23, n = c(rep(3, 7), 2), a = 8, 
+                                       sig_a_sq = 0.5, error_sq = 1)
+optimal_design
+```
+The user can then use either the A_crit or D_crit function to report a score.
+
+```{r}
+A_crit(optimal_design)
+D_crit(optimal_design)
+```
+

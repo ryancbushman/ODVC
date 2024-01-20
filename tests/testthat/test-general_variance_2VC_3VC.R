@@ -117,8 +117,9 @@ test_that("One-way unbalanced information matrix is correct", {
 test_that("Two-way balanced information matrix is correct", {
   # This test is based on the balanced case of a 2-way nested random effects
   # model. See Searle, S. R., George Casella, and Charles E. McCulloch. Variance
-  #' Components. Wiley Series in Probability and Statistics. Hoboken, NJ:
-  #' Wiley, 2006." page 158.
+  # Components. Wiley Series in Probability and Statistics. Hoboken, NJ:
+  # Wiley, 2006." page 158.
+  # Note: The book orders the variance components differently.
   tw_1 <- verify_2_way_info(n = 2, a = 2, b = 2, sig_a_sq = 1,
                             sig_b_sq = 1, error_sq = 1)
   tw_2 <- general_variance_3VC(N = 8, n_i_dot = c(4, 4), n_ij = c(2, 2, 2, 2),

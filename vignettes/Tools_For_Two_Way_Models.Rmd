@@ -1,0 +1,115 @@
+---
+title: "Tools For Two-Way Models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tools_For_Two_Way_Models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ODVC)
+```
+
+Optimal design of experiments for a random-effects model is a combinatorial 
+problem in nature. The reason being is that the object being optimized, the
+inverse information matrix, is a function of the sample sizes of the experiment 
+and the values of the variance components. When searching the space of possible
+designs, one must generate all designs of size $N$ and score the inverse
+information matrix of each design on some optimality criteria. When exploring
+two-way nested models, the amount of possible designs of size $N$ grows 
+exceptionally fast as $N$ increases. Two mitigate this, the ODVC generates all
+designs of a chosen $N$ from one of two classes, $\mathcal{C}_{3,2}$ and 
+$\mathcal{C}_{3,3}$. The first subscript indicates the number of variance 
+components. The second subscript indicates the maximum number of subgroups per
+group and the maximum number of replicates per subgroup. 
+
+The user can use the generate_two_way_designs function to generate all designs
+of size $N$ from class $s$, with variance components $\sigma^2_A$, $\sigma^2_B$,
+and $\sigma^2$.
+
+```{r}
+candidates <- generate_two_way_designs(N = 12, s = 2, sig_a_sq = 10, 
+                                       sig_b_sq = 2, error_sq = 1)
+```
+
+Once the dataframe of designs is generated, the user can call the 
+compare_designs_U function to compare design performance.
+
+```{r}
+compare_designs_U(data = candidates, criteria = "A")
+```
+The plot indicates that design 64 from the dataframe is the optimal design. By
+referencing the dataframe, the user can call the plot_design_2 function to 
+visualize the design.
+
+```{r}
+plot_design_2(a = 8,
+              b_i = c(2, 2, 2, 1, 1, 1, 1, 1),
+              n_ij = c(2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+              n_i_dot = c(3, 2, 2, 1, 1, 1, 1, 1),
+              sig_a_sq = 10,
+              sig_b_sq = 2,
+              error_sq = 1,
+              balanced = FALSE,
+              criteria = "A")
+```
+
+We will now walk through a different design scenario and but generate designs 
+from $\mathcal{C}_{3,3}$ rather than $\mathcal{C}_{3,2}$. Note that this takes 
+much longer to do because the number of possible designs is much greater.
+
+```{r}
+candidates2 <- generate_two_way_designs(N = 12, s = 3, sig_a_sq = 10, 
+                                       sig_b_sq = 10, error_sq = 1)
+```
+
+Once the dataframe of designs is generated, the user can call the 
+compare_designs_U function to compare design performance.
+
+```{r}
+design_performance <- compare_designs_U(data = candidates2, criteria = "A")
+design_performance + ylim(90, 100)
+```
+
+The plot indicates that design 233 from the dataframe is the optimal design. By
+referencing the dataframe, the user can provide the necessary information to 
+call the plot_design_2 function and visualize the design.
+
+```{r}
+plot_design_2(a = 4,
+              b_i = c(3, 3, 3, 2),
+              n_ij = c(2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+              n_i_dot = c(4, 3, 3, 2),
+              sig_a_sq = 10,
+              sig_b_sq = 10,
+              error_sq = 1,
+              balanced = FALSE,
+              criteria = "A")
+```
+
+The tools in the ODVC package score the designs for the user. If the user would 
+like to generate the actual matrix that is being optimized themselves, they can 
+call the general_variance_3VC function.
+
+```{r}
+optimal_design <- general_variance_3VC(N = 12, n_i_dot = c(4, 3, 3, 2), 
+                     n_ij = c(2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), sig_a_sq = 10,
+                     sig_b_sq = 10, error_sq = 1)
+optimal_design
+```
+
+They can then score the design using either the A_crit or D_crit function.
+
+```{r}
+A_crit(optimal_design)
+D_crit(optimal_design)
+```
+

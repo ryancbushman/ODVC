@@ -12,6 +12,18 @@ The goal of ODVC is to provide tools that allow researchers to do
 optimal design of experiments for one-way and two-way nested random
 effects models.
 
+In the optimal design of experiments framework, the goal is to optimize
+the model information matrix. The inverse of the information matrix is
+the covariance matrix for the maximum likelihood estimators (MLE). By
+maximizing the information of an experiment on some optimality criteria,
+one simultaneously minimizes the variance of the maximum likelihood
+estimators. The information matrix or MLE covariance matrix or can be
+scored using optimality criteria such as the $D$ criteria (the
+determinant) or the $A$ criteria (the trace). The tools of the ODVC
+package pose optimization as a minimization problem. In a random-effects
+model, the information matrix is a function of the experiment’s sample
+sizes and the values of the variance components.
+
 ## Installation
 
 You can install the development version of ODVC from

@@ -48,8 +48,9 @@ candidates2
 ```
 
 ```{r}
-plot_design(n = rep(3, 10), a = 10, sig_a = var_A, error = 1, criteria = "A")
+plot_design(n = rep(3, 10), a = 10, sig_a = var_A, error = 1, criteria = "D")
 ```
+
 ```{r}
 # one off plot not using plot design, axis and scores calculated in comparison to balanced design
 
