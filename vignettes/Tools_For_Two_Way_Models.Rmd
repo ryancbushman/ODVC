@@ -1,6 +1,6 @@
 ---
 title: "Tools For Two-Way Models"
-output: rmarkdown::pdf_document
+output: rmarkdown::html_document
 vignette: >
   %\VignetteIndexEntry{Tools_For_Two_Way_Models}
   %\VignetteEngine{knitr::rmarkdown}

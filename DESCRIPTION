@@ -32,7 +32,6 @@ Imports:
     partitions,
     ggraph,
     igraph,
-    tidyverse,
     statespacer,
     gtools,
     scales
