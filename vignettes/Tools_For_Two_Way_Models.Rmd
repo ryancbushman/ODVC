@@ -75,7 +75,7 @@ candidates2 <- generate_two_way_designs(N = 12, s = 3, sig_a_sq = 10,
 Once the dataframe of designs is generated, the user can call the 
 compare_designs_U function to compare design performance.
 
-```{r}
+```{r, warning = FALSE}
 design_performance <- compare_designs_U(data = candidates2, criteria = "A")
 design_performance + ylim(90, 100)
 ```
