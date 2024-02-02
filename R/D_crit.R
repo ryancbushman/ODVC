@@ -5,7 +5,7 @@
 #'
 #' @param M a matrix object
 #'
-#' @return the D score of the input provided matrix
+#' @return the D score of the input matrix
 #' @export
 #'
 #' @examples

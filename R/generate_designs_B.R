@@ -1,7 +1,7 @@
 #' generate_designs_B
 #'
-#' generate_designs_B creates a dataframe of experiment designs with user
-#' specified parameters.
+#' generate_designs_B creates a dataframe of balanced experiment designs with user
+#' specified parameters from one-way nested random-effects models.
 #'
 #' @param ngroups a vector of integers specifying the number of groups
 #' @param nreps a vector of integers specifying the number of replications per

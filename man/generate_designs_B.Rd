@@ -18,8 +18,8 @@ group}
 a dataframe of potential designs
 }
 \description{
-generate_designs_B creates a dataframe of experiment designs with user
-specified parameters.
+generate_designs_B creates a dataframe of balanced experiment designs with user
+specified parameters from one-way nested random-effects models.
 }
 \examples{
 

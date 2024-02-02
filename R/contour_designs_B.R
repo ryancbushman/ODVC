@@ -87,10 +87,6 @@ contour_designs_B <- function(ngroups = c(5, 10, 20, 30),
                                                  n = grid[l, 2], a = grid[l, 1],
                                                  sig_a_sq = taus[k],
                                                  error_sq = 1))
-          # grid$z[l] <- crit(one_way_cov_B(error_sq = 1,
-          #                                 tau = taus[k],
-          #                                 grid[l, 1],
-          #                                 grid[l, 2]))
         }
         OD_score <- as.double(tail(grid, n=1)[3])
         grid$releff <- (OD_score / grid$z) * 100

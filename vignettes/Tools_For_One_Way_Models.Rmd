@@ -1,6 +1,6 @@
 ---
 title: "Tools For One-Way Models"
-output: rmarkdown::html_vignette
+output: rmarkdown::pdf_document
 vignette: >
   %\VignetteIndexEntry{Tools_For_One_Way_Models}
   %\VignetteEngine{knitr::rmarkdown}
@@ -16,18 +16,23 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(ODVC)
+library(ggplot2)
 ```
 
 If a user would like to explore a wide variety of balanced one-way nested random
 effects designs with many different parameter settings, they can use 
 contour_designs_B function.
 
-```{r}
+```{r, fig.show='hide', warning=FALSE}
+
 contour_plots <- contour_designs_B(ngroups = c(2, 10), nreps = c(2, 10), 
                                    taus = 2)
+
+```
+
+```{r}
 contour_plots[[1]][[4]]
 contour_plots[[2]][[4]]
-
 ```
 Once the user narrows down what paremeter settings they would like to explore,
 they can use the generate_designs_B to generate balanced designs.
@@ -56,7 +61,7 @@ From the dashboard, the user can see that when $\sigma^2_A = 0.5$, the best
 design when N=24 under the $A$ criteria is the one that has 6 groups. The user
 can now use the plot_design function to visualize the design.
 
-```{r}
+```{r fig.height=2, fig.width=6}
 plot_design(n = rep(4, 6), a = 6, sig_a_sq = 0.5, error_sq = 1, criteria = "A")
 ```
 
@@ -64,6 +69,7 @@ If the user would like to explore unbalanced designs, they can use the
 generate_designs_U function.
 
 ```{r}
+options(width = 60)
 candidates_U <- generate_designs_U(N = 23, a = 8, sig_a_sq = 0.5, error_sq = 1)
 
 head(candidates_U)
@@ -81,7 +87,7 @@ From the plot, it is evident that the best design is the one with index 146 from
 the dataframe. By referencing this row in the dataframe, the user can use the 
 plot_design function to visualize this optimal design.
 
-```{r}
+```{r fig.height=2, fig.width=6}
 plot_design(n = c(rep(3, 7), 2), a = 8, sig_a_sq = 0.5, error_sq = 1, 
             criteria = "A")
 ```

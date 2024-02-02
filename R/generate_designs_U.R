@@ -1,9 +1,10 @@
 #' generate_designs_u
 #'
-#' generate_designs_u allows users to generate a data.frame  of all possible
-#' one-way nested designs with *N* observations and *a* number of groups. The
-#' data.frame contains A and D scores and relative efficiencies calculated as a
-#' function of the provided hypothesized value of \eqn{\sigma^2_A}.
+#' generate_designs_u allows users to generate a data.frame of all possible
+#' one-way nested random effects designs with *N* observations and *a* number of
+#' groups. The data.frame contains A and D scores and relative efficiencies
+#' calculated as a function of the provided hypothesized value of
+#' \eqn{\sigma^2_A}.
 #'
 #' @param N an integer representing the total number of design points
 #' @param a an integer representing the total number of groups
@@ -39,8 +40,6 @@ generate_designs_U <- function(N, a, sig_a_sq, error_sq){
 
 
   reps <- partitions::restrictedparts(n = N, m = a, include.zero = FALSE)
-  # reps <- getCols(parts(N), A = a, N = N)
-  # reps <- reps[1:a, ]
   count = 0
 
   for (i in seq_along(sig_a_sq)) {

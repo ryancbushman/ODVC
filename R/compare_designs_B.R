@@ -44,9 +44,7 @@ compare_designs_B <- function(designs, criteria){
            x = "Number of Groups",
            y = paste0("Standardized D Score"),
            color = "tau") +
-      scale_x_continuous(breaks = scales::pretty_breaks()) # swap cont. for discrete
-      #geom_text(aes(label = round(D_Score, 2)), size = 3.5,
-               # position = position_dodge2(width = 1, preserve = "single"), vjust = -0.1)
+      scale_x_continuous(breaks = scales::pretty_breaks())
 
     r_plot <- ggplot(data = designs, aes(x = a, y = Relative.D.Efficiency, fill = tau)) +
       geom_bar(stat = "identity", position = position_dodge()) +
@@ -55,8 +53,7 @@ compare_designs_B <- function(designs, criteria){
            y = paste0("D Relative Efficiency"),
            color = "tau") +
       scale_x_continuous(breaks = scales::pretty_breaks())
-      #geom_text(aes(label = round(Relative.D.Efficiency, 2)), size = 3.5,
-                #position = position_dodge2(width = 1, preserve = "single"), vjust = -0.1)
+
 
     subsets <- vector(mode = 'list', length = length(unique(designs$tau)))
     taus <- unique(designs$tau)
@@ -105,8 +102,7 @@ compare_designs_B <- function(designs, criteria){
            y = paste0("Standardized A Score"),
            color = "tau") +
       scale_x_continuous(breaks = scales::pretty_breaks())
-      #geom_text(aes(label = round(A_Score, 2)), size = 3.5,
-                #position = position_dodge2(width = 1, preserve = "single"), vjust = -0.1)
+
 
     r_plot <- ggplot(data = designs, aes(x = a, y = Relative.A.Efficiency, fill = tau)) +
       geom_bar(stat = "identity", position = position_dodge()) +
@@ -115,8 +111,7 @@ compare_designs_B <- function(designs, criteria){
            y = "A Relative Efficiency",
            color = "tau") +
       scale_x_continuous(breaks = scales::pretty_breaks())
-      #geom_text(aes(label = round(Relative.A.Efficiency, 2)), size = 3.5,
-                #position = position_dodge2(width = 1, preserve = "single"), vjust = -0.1)
+
 
     subsets <- vector(mode = 'list', length = length(unique(designs$tau)))
     taus <- unique(designs$tau)

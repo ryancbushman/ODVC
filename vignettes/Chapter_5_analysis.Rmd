@@ -1008,7 +1008,23 @@ df3 <- plot_design_2(a = 4,
   annotate(geom="text", x=-1, y=2.5, label="DF = 3", color="black", size = 3.3) 
 
 dfl <- list(df1, df2, df3)
-gridExtra::grid.arrange(grobs = dfl, nrow = 1)
+gridExtra::grid.arrange(grobs = dfl, ncol = 1)
+
+plot_design_2(a = 3, 
+              b_i = c(2, 2, 2), 
+              n_ij = c(2, 2, 2, 2, 2, 2), 
+              n_i_dot = c(4, 4, 4), 
+              criteria = "D", 
+              balanced = TRUE, 
+              sig_a_sq = 0.5, 
+              sig_b_sq = 10, 
+              error_sq = 1) +
+  ggtitle("Design 1: 91.96% Efficient") +
+  theme(plot.title = element_text(hjust = 0.5)) + 
+  theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "inches"))  +
+  annotate(geom="text", x=-1, y=0.5, label="DF = 6", color="black", size = 3.3) +
+  annotate(geom="text", x=-1, y=1.5, label="DF = 3", color="black", size = 3.3) +
+  annotate(geom="text", x=-1, y=2.5, label="DF = 2", color="black", size = 3.3)
 ```
 
 When staggered nested designs are highly efficient

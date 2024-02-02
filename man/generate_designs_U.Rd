@@ -20,10 +20,11 @@ to try}
 a data.frame of experiment designs of size N
 }
 \description{
-generate_designs_u allows users to generate a data.frame  of all possible
-one-way nested designs with \emph{N} observations and \emph{a} number of groups. The
-data.frame contains A and D scores and relative efficiencies calculated as a
-function of the provided hypothesized value of \eqn{\sigma^2_A}.
+generate_designs_u allows users to generate a data.frame of all possible
+one-way nested random effects designs with \emph{N} observations and \emph{a} number of
+groups. The data.frame contains A and D scores and relative efficiencies
+calculated as a function of the provided hypothesized value of
+\eqn{\sigma^2_A}.
 }
 \examples{
 candidates <- generate_designs_U(N = 20, a = 4, sig_a_sq = 2, error_sq = 1)

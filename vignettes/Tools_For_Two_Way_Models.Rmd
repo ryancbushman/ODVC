@@ -1,6 +1,6 @@
 ---
 title: "Tools For Two-Way Models"
-output: rmarkdown::html_vignette
+output: rmarkdown::pdf_document
 vignette: >
   %\VignetteIndexEntry{Tools_For_Two_Way_Models}
   %\VignetteEngine{knitr::rmarkdown}
@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(ODVC)
+library(ggplot2)
 ```
 
 Optimal design of experiments for a random-effects model is a combinatorial 
@@ -50,7 +51,7 @@ The plot indicates that design 64 from the dataframe is the optimal design. By
 referencing the dataframe, the user can call the plot_design_2 function to 
 visualize the design.
 
-```{r}
+```{r fig.height=2, fig.width=6}
 plot_design_2(a = 8,
               b_i = c(2, 2, 2, 1, 1, 1, 1, 1),
               n_ij = c(2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
@@ -83,7 +84,7 @@ The plot indicates that design 233 from the dataframe is the optimal design. By
 referencing the dataframe, the user can provide the necessary information to 
 call the plot_design_2 function and visualize the design.
 
-```{r}
+```{r fig.height=2, fig.width=6}
 plot_design_2(a = 4,
               b_i = c(3, 3, 3, 2),
               n_ij = c(2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),

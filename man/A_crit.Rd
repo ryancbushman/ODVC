@@ -10,7 +10,7 @@ A_crit(M)
 \item{M}{a matrix object}
 }
 \value{
-the A score of the input provided matrix
+the A score of the input matrix
 }
 \description{
 A_crit returns the A score for a specific experiment design. The A score is

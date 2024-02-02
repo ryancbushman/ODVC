@@ -10,7 +10,7 @@ D_crit(M)
 \item{M}{a matrix object}
 }
 \value{
-the D score of the input provided matrix
+the D score of the input matrix
 }
 \description{
 D_crit returns the D score for a specific experiment design. The D score is

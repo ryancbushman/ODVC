@@ -49,7 +49,7 @@ plot_design <- function(n, a, sig_a_sq, error_sq, criteria) {
                                  n = n,
                                  a = a,
                                  sig_a_sq = sig_a_sq, error_sq = error_sq)
-    #info <- one_way_cov_U(sum(n), a, n, sig_a_sq, error_sq)
+
     score <- crit(info)
   } else {
     title <- paste0("Balanced experiment with ", a,
@@ -58,7 +58,7 @@ plot_design <- function(n, a, sig_a_sq, error_sq, criteria) {
                                  n = n,
                                  a = a,
                                  sig_a_sq = sig_a_sq, error_sq = error_sq)
-    #info <- one_way_cov_B(error_sq = error_sq, tau = (sig_a_sq / error_sq), a = a, n = n[1])
+
     score <- crit(info)
   }
 
