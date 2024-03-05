@@ -196,7 +196,7 @@ test_that("Two-way unbalanced information matrix is correct", {
 
   test <- 2 * solve(matrix(elements, 3, 3))
 
-  testthat::expect_equal(round(test, 3),
-               round(general_variance_3VC(9, c(5, 4), c(2, 3, 1, 2, 1),
-                                          1, 1, 1), 3))
+  testthat::expect_equal(test,
+                         general_variance_3VC(9, c(5, 4), c(2, 3, 1, 2, 1),
+                                                    1, 1, 1))
 })

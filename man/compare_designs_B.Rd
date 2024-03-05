@@ -28,5 +28,4 @@ candidate_designs <- generate_designs_B(ngroups = c(2, 3, 4, 6),
 nreps = c(2, 3, 4, 6), taus = c(1, 2))
 candidate_designs <- subset_designs_B(data = candidate_designs, N = 12)
 compare_designs_B(designs = candidate_designs, criteria = "D")
-
 }

@@ -21,7 +21,7 @@
 #' nreps = c(2, 3, 4, 6), taus = c(1, 2))
 #' candidate_designs <- subset_designs_B(data = candidate_designs, N = 12)
 #' compare_designs_B(designs = candidate_designs, criteria = "D")
-#'
+
 compare_designs_B <- function(designs, criteria){
   if (!is.data.frame(designs)) {
     stop("designs must be a data.frame created using the subset_designs_B()
@@ -54,46 +54,43 @@ compare_designs_B <- function(designs, criteria){
            color = "tau") +
       scale_x_continuous(breaks = scales::pretty_breaks())
 
-
-    subsets <- vector(mode = 'list', length = length(unique(designs$tau)))
     taus <- unique(designs$tau)
-
-    for (i in seq_along(subsets)) {
-      subsets[[i]] <- designs[designs$tau == taus[i], ]
-    }
-
+    relative.efficiency.tau <- numeric()
     OD_score <- numeric(length = length(unique(designs$tau)))
-    releff_tau <- vector(mode = 'list', length = length(unique(designs$tau)))
     for (j in seq_along(taus)) {
-      check <- designs$D_Score[designs$tau == taus[j]]
-      OD_score[j] <- min(check)
+        check <- designs$D_Score[designs$tau == taus[j]]
+        OD_score[j] <- min(check)
     }
 
-    for (k in seq_along(subsets)) {
-      releff_tau[[k]] <- 100 * OD_score[k] / subsets[[k]]$D_Score
-      subsets[[k]]$releff <- releff_tau[[k]]
+    for (k in seq_along(taus)) {
+        temp <- 100 * OD_score[k] / designs$D_Score[designs$tau == taus[k]]
+        relative.efficiency.tau <- c(relative.efficiency.tau, temp)
     }
 
-    tau_plots <- vector(mode = 'list', length = length(taus))
-    for (l in seq_along(taus)) {
-      tau_plots[[l]] <- ggplot(data = subsets[[l]], aes(x = a, y = Relative.D.Efficiency)) +
-        geom_bar(stat = 'identity') +
-        labs(title = paste0("Relative Efficiency of Designs with Tau = ", taus[l])) +
-        ylab("Relative Efficiency") +
-        xlab("Number of Groups") +
-        scale_x_continuous(breaks = scales::pretty_breaks()) +
-        theme(plot.title = element_text(size=10),
-              axis.title = element_text(size = 10))
-    }
+    designs <- designs[order(designs$tau), ]
+    designs$relative.efficiency.tau <- relative.efficiency.tau
 
-    grob <- vector(mode = 'list', length = length(taus) + 1)
+    tau_plots <- ggplot(data = designs, aes(x = a, y = relative.efficiency.tau)) +
+          geom_bar(stat = 'identity') +
+          labs(title = paste0("Relative Efficiency by values of Tau")) +
+          ylab("Relative Efficiency") +
+          xlab("Number of Groups") +
+          scale_x_continuous(breaks = scales::pretty_breaks()) +
+          theme(plot.title = element_text(size=12),
+                axis.title = element_text(size = 12)) +
+      facet_wrap(designs$tau, ncol = 2) +
+      theme(plot.title = element_text(hjust = 0.5))
+
+    grob <- vector(mode = 'list', length = 3)
     grob[[1]] <- c_plot
     grob[[2]] <- r_plot
-    for (m in seq_along(taus)) {
-      grob[[m + 2]] <- tau_plots[[m]]
-    }
+    grob[[3]] <- tau_plots
 
-    gridExtra::grid.arrange(grobs = grob, ncol = 2)
+    height = ceiling(length(taus) / 2)
+    first_row <- c(1,1,2,2)
+    rest <- matrix(rep(3, height * 4), nrow = height, ncol = 4)
+    lay <- rbind(first_row, rest)
+    gridExtra::grid.arrange(grobs = grob, layout_matrix = lay)
   } else {
     c_plot <- ggplot(data = designs, aes(x = a, y = A_Score, fill = tau)) +
       geom_bar(stat = "identity", position = position_dodge()) +
@@ -103,55 +100,51 @@ compare_designs_B <- function(designs, criteria){
            color = "tau") +
       scale_x_continuous(breaks = scales::pretty_breaks())
 
-
     r_plot <- ggplot(data = designs, aes(x = a, y = Relative.A.Efficiency, fill = tau)) +
       geom_bar(stat = "identity", position = position_dodge()) +
       labs(title = paste0("Designs of size ", designs$N[1]),
            x = "Number of Groups",
-           y = "A Relative Efficiency",
+           y = paste0("A Relative Efficiency"),
            color = "tau") +
       scale_x_continuous(breaks = scales::pretty_breaks())
 
-
-    subsets <- vector(mode = 'list', length = length(unique(designs$tau)))
     taus <- unique(designs$tau)
-
-    for (i in seq_along(subsets)) {
-      subsets[[i]] <- designs[designs$tau == taus[i], ]
-    }
-
+    relative.efficiency.tau <- numeric()
     OD_score <- numeric(length = length(unique(designs$tau)))
-    releff_tau <- vector(mode = 'list', length = length(unique(designs$tau)))
     for (j in seq_along(taus)) {
       check <- designs$A_Score[designs$tau == taus[j]]
       OD_score[j] <- min(check)
     }
 
-    for (k in seq_along(subsets)) {
-      releff_tau[[k]] <- 100 * OD_score[k] / subsets[[k]]$A_Score
-      subsets[[k]]$releff <- releff_tau[[k]]
+    for (k in seq_along(taus)) {
+      temp <- 100 * OD_score[k] / designs$A_Score[designs$tau == taus[k]]
+      relative.efficiency.tau <- c(relative.efficiency.tau, temp)
     }
 
-    tau_plots <- vector(mode = 'list', length = length(taus))
-    for (l in seq_along(taus)) {
-      tau_plots[[l]] <- ggplot(data = subsets[[l]], aes(x = a, y = Relative.A.Efficiency)) +
-        geom_bar(stat = 'identity') +
-        labs(title = paste0("Relative Efficiency of Designs with Tau = ", taus[l])) +
-        ylab("Relative Efficiency") +
-        xlab("Number of Groups") +
-        scale_x_continuous(breaks = scales::pretty_breaks()) +
-        theme(plot.title = element_text(size=10),
-              axis.title = element_text(size = 10))
-    }
+    designs <- designs[order(designs$tau), ]
+    designs$relative.efficiency.tau <- relative.efficiency.tau
 
-    grob <- vector(mode = 'list', length = length(taus) + 1)
+    tau_plots <- ggplot(data = designs, aes(x = a, y = relative.efficiency.tau)) +
+      geom_bar(stat = 'identity') +
+      labs(title = paste0("Relative Efficiency by values of Tau")) +
+      ylab("Relative Efficiency") +
+      xlab("Number of Groups") +
+      scale_x_continuous(breaks = scales::pretty_breaks()) +
+      theme(plot.title = element_text(size=12),
+            axis.title = element_text(size = 12)) +
+      facet_wrap(designs$tau, ncol = 2) +
+      theme(plot.title = element_text(hjust = 0.5))
+
+    grob <- vector(mode = 'list', length = 3)
     grob[[1]] <- c_plot
     grob[[2]] <- r_plot
-    for (m in seq_along(taus)) {
-      grob[[m + 2]] <- tau_plots[[m]]
-    }
+    grob[[3]] <- tau_plots
 
-    gridExtra::grid.arrange(grobs = grob, ncol = 2)
+    height = ceiling(length(taus) / 2)
+    first_row <- c(1,1,2,2)
+    rest <- matrix(rep(3, height * 4), nrow = height, ncol = 4)
+    lay <- rbind(first_row, rest)
+    gridExtra::grid.arrange(grobs = grob, layout_matrix = lay)
   }
 }
 
