@@ -8,6 +8,9 @@
 #' @param data a data.frame created using generate_designs_U()
 #' @param criteria a character "D" or "A" to indicate the criteria designs are
 #' scored on. Should match criteria used in the generate_designs_U() dataset
+#' @param top_5 a logical argument. If set to TRUE the output plot will assign
+#' data labels to only the top 5 performing designs. If set to FALSE, the output
+#' plot will assign data labels to all designs.
 #'
 #' @return a ggplot object
 #' @export
