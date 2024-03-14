@@ -76,6 +76,7 @@ much longer to do because the number of possible designs is much greater.
 candidates2 <- generate_two_way_designs(N = 12, s = 3, sig_a_sq = 10, 
                                        sig_b_sq = 10, error_sq = 1)
 ```
+
 ```{r, echo=FALSE}
 candidates2 <- data("N12_3_10_10")
 candidates2 <- N12_3_10_10
@@ -83,10 +84,12 @@ candidates2 <- N12_3_10_10
 
 
 Once the dataframe of designs is generated, the user can call the 
-compare_designs_U function to compare design performance.
+compare_designs_U function to compare design performance. They can also
+set the top_5 argument equal to TRUE to label only the top 5 performing designs.
 
 ```{r, warning = FALSE}
-design_performance <- compare_designs_U(data = candidates2, criteria = "A")
+design_performance <- compare_designs_U(data = candidates2, criteria = "A", 
+                                        top_5 = TRUE)
 design_performance + ggplot2::ylim(90, 100)
 ```
 
@@ -111,16 +114,19 @@ like to generate the actual matrix that is being optimized themselves, they can
 call the general_variance_3VC function.
 
 ```{r}
-optimal_design <- general_variance_3VC(N = 12, n_i_dot = c(4, 3, 3, 2), 
-                     n_ij = c(2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), sig_a_sq = 10,
-                     sig_b_sq = 10, error_sq = 1)
-optimal_design
+optimal_design_inv_info_matrix <- general_variance_3VC(N = 12, 
+                                                   n_i_dot = c(4, 3, 3, 2), 
+                                                   n_ij = c(2, 1, 1, 1, 1, 1, 1,
+                                                            1, 1, 1, 1), 
+                                                   sig_a_sq = 10,
+                                                   sig_b_sq = 10, error_sq = 1)
+optimal_design_inv_info_matrix
 ```
 
 They can then score the design using either the A_crit or D_crit function.
 
 ```{r}
-A_crit(optimal_design)
-D_crit(optimal_design)
+A_crit(optimal_design_inv_info_matrix)
+D_crit(optimal_design_inv_info_matrix)
 ```
 

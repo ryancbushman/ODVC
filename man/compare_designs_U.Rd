@@ -4,7 +4,7 @@
 \alias{compare_designs_U}
 \title{compare_designs_U}
 \usage{
-compare_designs_U(data, criteria)
+compare_designs_U(data, criteria, top_5 = FALSE)
 }
 \arguments{
 \item{data}{a data.frame created using generate_designs_U()}
@@ -23,5 +23,5 @@ that are at least 90\% efficient compared to the optimal design
 }
 \examples{
 candidates <- generate_designs_U(N = 20, a = 5, sig_a_sq = 2, error = 1)
-compare_designs_U(data = candidates, criteria = "D")
+compare_designs_U(data = candidates, criteria = "D", top_5 = TRUE)
 }

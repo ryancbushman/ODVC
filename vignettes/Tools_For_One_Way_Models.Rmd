@@ -77,10 +77,11 @@ head(candidates_U)
 
 To compare the performance of these designs they can use the compare_designs_U
 function. This generates a scatter plot of relative efficiency and index within
-the design dataframe.
+the design dataframe. The user can also set the top_5 argument equal to TRUE to
+label only the top 5 performing designs.
 
 ```{r}
-compare_designs_U(data = candidates_U, criteria = "A")
+compare_designs_U(data = candidates_U, criteria = "A", top_5 = TRUE)
 ```
 
 From the plot, it is evident that the best design is the one with index 146 from
@@ -91,6 +92,7 @@ plot_design function to visualize this optimal design.
 plot_design(n = c(rep(3, 7), 2), a = 8, sig_a_sq = 0.5, error_sq = 1, 
             criteria = "A")
 ```
+
 In the optimal design of experiments framework, the goal is to optimize the 
 model information matrix. The inverse of the information matrix is the 
 covariance matrix for the maximum likelihood estimators. By maximizing the 
@@ -106,14 +108,15 @@ the maximum likelihood estimators (the object being optimized) for a particular
 experiment.
 
 ```{r}
-optimal_design <- general_variance_2VC(N = 23, n = c(rep(3, 7), 2), a = 8, 
-                                       sig_a_sq = 0.5, error_sq = 1)
-optimal_design
+optimal_design_inv_info_matrix <- general_variance_2VC(N = 23, n = c(rep(3, 7), 2), 
+                                                   a = 8, sig_a_sq = 0.5, 
+                                                   error_sq = 1)
+optimal_design_inv_info_matrix
 ```
 The user can then use either the A_crit or D_crit function to report a score.
 
 ```{r}
-A_crit(optimal_design)
-D_crit(optimal_design)
+A_crit(optimal_design_inv_info_matrix)
+D_crit(optimal_design_inv_info_matrix)
 ```
 

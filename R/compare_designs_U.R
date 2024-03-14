@@ -14,8 +14,9 @@
 #'
 #' @examples
 #' candidates <- generate_designs_U(N = 20, a = 5, sig_a_sq = 2, error = 1)
-#' compare_designs_U(data = candidates, criteria = "D")
-compare_designs_U <- function(data, criteria) {
+#' compare_designs_U(data = candidates, criteria = "D", top_5 = TRUE)
+
+compare_designs_U <- function(data, criteria, top_5 = FALSE) {
   if (!is.data.frame(data)) {
     stop("data must be a dataframe of candidate designs generated using
          generate_designs_U(), generate_two_way_designs(), or
@@ -29,14 +30,36 @@ compare_designs_U <- function(data, criteria) {
   } else if (criteria == "A") {
     relative.efficiency = data$Relative.A.Efficiency
   }
-  ggplot(data = data, aes(y = relative.efficiency,
-                          x = seq_along(relative.efficiency))) +
-    geom_point(size = 1) +
-    geom_text(aes(label = seq_along(relative.efficiency)), vjust = -0.5, size = 4) +
-    xlab("Dataset Index") +
-    ylab(paste0(criteria, " Relative Efficiency")) +
-    ggtitle(paste0("Comparing Relative Efficiency Across Unbalanced Designs of size ", data$N[1])) +
-    geom_abline(slope = 0, intercept = 90, color = "red") +
-    scale_x_continuous(breaks = scales::pretty_breaks())
+  data$id <- seq_len(nrow(data))
+
+  if (top_5 == FALSE) {
+    ggplot(data = data, aes(y = relative.efficiency,
+                            x = id)) +
+      geom_point(size = 1) +
+      geom_text(aes(label = id), vjust = -0.5, size = 4) +
+      xlab("Dataset Index") +
+      ylab(paste0(criteria, " Relative Efficiency")) +
+      ggtitle(paste0("Comparing Relative Efficiency Across Unbalanced Designs of size ", data$N[1])) +
+      geom_abline(slope = 0, intercept = 90, color = "red") +
+      scale_x_continuous(breaks = scales::pretty_breaks())
+  } else {
+    label_data <- head(data[order(relative.efficiency, decreasing = TRUE), ], 5)
+    if (criteria == "D") {
+      l_relative.efficiency = label_data$Relative.D.Efficiency
+    } else if (criteria == "A") {
+      l_relative.efficiency = label_data$Relative.A.Efficiency
+    }
+
+
+    ggplot(data = data, aes(y = relative.efficiency, x = seq_along(relative.efficiency))) +
+      geom_point(size = 1) +
+      geom_text(data = label_data,
+                aes(label = id, x = id, y = l_relative.efficiency, vjust = -0.5), size = 4) +
+      xlab("Dataset Index") +
+      ylab(paste0(criteria, " Relative Efficiency")) +
+      ggtitle(paste0("Comparing Relative Efficiency Across Unbalanced Designs of size ", data$N[1])) +
+      geom_abline(slope = 0, intercept = 90, color = "red") +
+      scale_x_continuous(breaks = scales::pretty_breaks())
+  }
 }
 
