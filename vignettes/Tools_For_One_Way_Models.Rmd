@@ -31,10 +31,10 @@ contour_plots <- contour_designs_B(ngroups = c(2, 10), nreps = c(2, 10),
 ```
 
 ```{r}
-contour_plots[[1]][[4]]
-contour_plots[[2]][[4]]
+contour_plots[[1]][4]
+contour_plots[[2]][4]
 ```
-Once the user narrows down what paremeter settings they would like to explore,
+Once the user narrows down what parameter settings they would like to explore,
 they can use the generate_designs_B to generate balanced designs.
 
 ```{r}

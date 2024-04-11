@@ -104,7 +104,7 @@ contour_designs_B <- function(ngroups = c(5, 10, 20, 30),
               scale_x_continuous(breaks = seq(0, ngroups[i], 2)) +
               scale_y_continuous(breaks = seq(0, nreps[j], 2)) +
               geom_abline(slope = 1, intercept = 0, color = "red") +
-              ggtitle(paste0("D score when Tau = ", taus[k]))))
+              ggtitle(paste0(criteria, " score when Tau = ", taus[k]))))
 
         contour_releff <- suppressMessages(print(ggplot(grid) +
                                                    geom_contour_filled(data = grid,
@@ -124,6 +124,6 @@ contour_designs_B <- function(ngroups = c(5, 10, 20, 30),
       }
     }
   }
-  score_releff_plots <- list(balanced_contours_scores, balanced_contours_releff)
-  return(score_releff_plots)
+  #score_releff_plots <- list(balanced_contours_scores, balanced_contours_releff)
+  return(list(balanced_contours_releff, balanced_contours_scores))
 }
